@@ -45,7 +45,7 @@ class MyHomePage extends StatelessWidget {
                     final item = docs[index];
                     return ListTile(
                       title: Text(
-                        item['tipus'+'!'],
+                        item['tipus'],
                       ),
                     );
                   },
