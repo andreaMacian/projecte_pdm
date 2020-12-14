@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -21,16 +22,39 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Gimnas App"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Container(
-          color: Colors.lightBlue[200],
-        ),
-      ),
+    final act = FirebaseFirestore.instance.collection('Activitats');
+    return StreamBuilder(
+      stream: act.snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        final docs = snapshot.data.docs;
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("Gimnas App"),
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: docs.length,
+                  itemBuilder: (context, index) {
+                    final item = docs[index];
+                    return ListTile(
+                      title: Text(
+                        item['tipus'],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
