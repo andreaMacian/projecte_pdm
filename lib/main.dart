@@ -1,11 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+
+import 'sign_in_flow/auth_state_switch.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(
+    AuthStateSwitch(
+      app: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,6 +29,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
     final act = FirebaseFirestore.instance.collection('Activitats');
     return StreamBuilder(
       stream: act.snapshots(),
@@ -35,6 +43,14 @@ class MyHomePage extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text("Gimnas App"),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.logout),
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                },
+              ),
+            ],
           ),
           body: Column(
             children: [
@@ -51,6 +67,8 @@ class MyHomePage extends StatelessWidget {
                   },
                 ),
               ),
+              Text("${user.email}"),
+              Text("${user.uid}"),
             ],
           ),
         );
