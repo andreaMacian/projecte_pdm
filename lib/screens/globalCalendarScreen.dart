@@ -32,8 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final act = FirebaseFirestore.instance.collection('Activitats');
-    
-    
+
     return StreamBuilder(
       stream: act.snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -48,8 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
         if (screen == 0) {
           //go to news screen
           mainwidget = NewsScreen();
-        
-                
         } else if (screen == 1) {
           //calendar global
           //Aquí anirà el widget del calendari global
@@ -142,5 +139,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-

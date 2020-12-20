@@ -10,7 +10,7 @@ class NewsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final news = FirebaseFirestore.instance.collection('News');
     return StreamBuilder(
-        stream: news.snapshots(),
+        stream: news.orderBy('data_public', descending: true).snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
