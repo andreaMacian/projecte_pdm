@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'newsScreen.dart';
+import 'personalCalendarScreen.dart';
+
 class GlobalCalendarScreen extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -29,6 +32,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final act = FirebaseFirestore.instance.collection('Activitats');
+    
+    
     return StreamBuilder(
       stream: act.snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -38,12 +43,15 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         }
         final docs = snapshot.data.docs;
+
         var mainwidget;
         if (screen == 0) {
-          mainwidget = Container(
-            child: Text("0"), //Aquí anirà el widget del llistat de les notícies
-          );
+          //go to news screen
+          mainwidget = NewsScreen();
+        
+                
         } else if (screen == 1) {
+          //calendar global
           //Aquí anirà el widget del calendari global
           mainwidget = ListView.builder(
             itemCount: docs.length,
@@ -57,8 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           );
         } else {
-          mainwidget =
-              Container(); //Aquí anirà el widget del calendari personal
+          //go to Personal calendar Screen
+          mainwidget = PersonalCalendarScreen(docs: docs);
         }
 
         return Scaffold(
@@ -134,3 +142,5 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
