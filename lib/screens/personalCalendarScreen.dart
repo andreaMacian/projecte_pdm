@@ -7,7 +7,7 @@ final user = FirebaseFirestore.instance.collection('Usuaris');
 class PersonalCalendarScreen extends StatelessWidget {
   const PersonalCalendarScreen({
     Key key,
-    @required this.docs,
+    this.docs,
   }) : super(key: key);
 
   final List<QueryDocumentSnapshot> docs;
