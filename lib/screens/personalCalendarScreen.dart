@@ -14,7 +14,7 @@ class PersonalCalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return Container(color: Colors.yellow)/*ListView.builder(
       //Aquí anirà el widget del calendari personal
       itemCount: docs.length,
       itemBuilder: (context, index) {
@@ -25,6 +25,6 @@ class PersonalCalendarScreen extends StatelessWidget {
           ),
         );
       },
-    );
+    )*/;
   }
 }
