@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'screens/globalCalendarScreen.dart';
+import 'package:proyecto/screens/structureApp.dart';
+
 import 'sign_in_flow/auth_state_switch.dart';
 
 void main() async {
@@ -8,7 +9,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(
     AuthStateSwitch(
-      app: GlobalCalendarScreen(),
+      app: StructureApp(),
     ),
   );
 }
