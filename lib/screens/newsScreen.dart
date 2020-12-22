@@ -25,73 +25,21 @@ class NewsScreen extends StatelessWidget {
               final item = newsDocs[index];
               //bool _expanded = false;
 
-              return collapsibleNew(item);
-              /*Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Container(
-                  height: (_expanded ? null : 90),
-                  child: ListTile(
-                    title: Text(
-                      item['titol'],
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          item['contingut'],
-                          maxLines: (_expanded ? null : 2),
-                        ),
-                        FlatButton(
-                          child: Icon(_expanded ? Icons.expand_less : Icons.expand_more),
-                          onPressed: () {/*
-                            setState(() {
-                              _expanded = !_expanded;
-                            });*/
-                          },
-                        ),
-                      ],
-                    ),
-                    trailing: Icon(
-                      Icons.warning_outlined,
-                      color: chooseColor(item['rellevancia']),
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey[300],
-                        offset: new Offset(0.0, 1.0),
-                        blurRadius: 50.0,
-                      ),
-                    ],
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              );*/
+              return CollapsibleNew(item);
             },
           );
         });
   }
-
-  /*Color chooseColor(int rellevancia) {
-    if (rellevancia == 1) return Colors.green;
-    if (rellevancia == 2)
-      return Colors.yellow;
-    else {
-      return Colors.red;
-    }
-  }*/
 }
 
-class collapsibleNew extends StatefulWidget {
+class CollapsibleNew extends StatefulWidget {
   final item;
-  collapsibleNew(this.item);
+  CollapsibleNew(this.item);
   @override
-  _collapsibleNewState createState() => _collapsibleNewState();
+  _CollapsibleNewState createState() => _CollapsibleNewState();
 }
 
-class _collapsibleNewState extends State<collapsibleNew> {
+class _CollapsibleNewState extends State<CollapsibleNew> {
   bool _expanded = false;
 
   Color chooseColor(int rellevancia) {

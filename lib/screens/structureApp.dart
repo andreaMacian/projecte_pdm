@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +24,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int screen = 1;
+  String title = "Calendari d'Activitats";
   /*
     0 -> newsScreen
     1 -> CalendarGlobal
@@ -36,25 +36,35 @@ class _MyHomePageState extends State<MyHomePage> {
     if (screen == 0) {
       //go to news screen
       mainwidget = NewsScreen();
+      title = "Notícies";
     } else if (screen == 1) {
       //calendar global
       //Aquí anirà el widget del calendari global
       mainwidget = GlobalCalendarScreen();
+      title = "Calendari d'Activitats";
     } else {
       //go to Personal calendar Screen
       mainwidget = PersonalCalendarScreen();
+      title = "Calendari Personal";
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Gimnas App"),
+        title: Text("$title"),
         actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-          ),
+          (screen == 1)
+              ? IconButton(
+                  icon: Icon(Icons.filter_alt_outlined),
+                  onPressed: () {},
+                )
+              : (screen == 2)
+                  ? IconButton(
+                      icon: Icon(Icons.logout),
+                      onPressed: () {
+                        FirebaseAuth.instance.signOut();
+                      },
+                    )
+                  : SizedBox(), //que no haya ningún icono
         ],
       ),
       body: Center(
@@ -100,9 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Spacer(),
                       FlatButton(
                         child: Icon(Icons.perm_contact_calendar,
-                            color: (screen==2)
-                                ? Colors.grey
-                                : Colors.black),
+                            color: (screen == 2) ? Colors.grey : Colors.black),
                         onPressed: () {
                           setState(() {
                             screen = 2;
