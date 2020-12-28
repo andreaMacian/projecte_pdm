@@ -41,8 +41,20 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
-assets:
-  - assets/icons/
+  assets: 
+    - bicicleta-estatica.png
+    - Spinning.png
+    - calendario-global.png
+    - calendario-personal.png
+    - Calistenia.png
+    - cerrar-sesion.png
+    - Crossfit.png
+    - editar.png
+    - filtrar.png
+    - Kickboxing.png
+    - logo-ufit.png
+    - news.png
+    - Ioga.png
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
