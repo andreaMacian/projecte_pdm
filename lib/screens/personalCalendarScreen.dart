@@ -69,12 +69,48 @@ class PersonalCalendarScreen extends StatelessWidget {
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  item['inici'].toString(), //no sé comm imprimir la data com volem: DL 10:00 - 11:00h 
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
+                                Row(children: [
+                                    Text(
+                                    item['inici']
+                                        .toDate()
+                                        .day
+                                        .toString(), //no sé comm imprimir la data com volem: DL 10:00 - 11:00h
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
+                                  Text('.'),
+                                  Text(
+                                    item['inici']
+                                        .toDate()
+                                        .month
+                                        .toString(), //no sé comm imprimir la data com volem: DL 10:00 - 11:00h
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(' de '),
+Text(
+                                    item['inici']
+                                        .toDate()
+                                        .hour
+                                        .toString(), //no sé comm imprimir la data com volem: DL 10:00 - 11:00h
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+Text(' a '),
+Text(
+                                    item['final']
+                                        .toDate()
+                                        .hour
+                                        .toString(), //no sé comm imprimir la data com volem: DL 10:00 - 11:00h
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+
+                                ]),
                                 Text(item['tipus']),
                                 Text(
                                   item['lloc'],
