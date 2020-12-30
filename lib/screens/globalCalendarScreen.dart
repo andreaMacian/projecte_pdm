@@ -39,23 +39,27 @@ class GlobalCalendarScreen extends StatelessWidget {
                         //CONTAINER CON LAS HORAS
                         width: 60,
                         color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                height: 10,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  for (int i = 9; i < 22; i++)
+                                    Text(
+                                      '$i:00',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                ],
                               ),
-                              for (int i = 9; i < 22; i++)
-                                Text(
-                                  '$i:00',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                       Expanded(
@@ -177,7 +181,7 @@ class DiaCalendari extends StatelessWidget {
           children: [
             Container(
               child: Text(
-                '${semana[this.dia-1]}',
+                '${semana[this.dia - 1]}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -185,7 +189,8 @@ class DiaCalendari extends StatelessWidget {
               height: 40,
               alignment: Alignment.center,
             ),
-            Expanded(
+            //EL QUE HI HAVIA ABANS
+            /*Expanded(
               child: ListView.builder(
                 itemCount: docs.length,
                 itemBuilder: (context, index) {
@@ -196,6 +201,18 @@ class DiaCalendari extends StatelessWidget {
                     ),
                   );
                 },
+              ),
+            ),*/
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  for (int i = 9; i < 22; i++)
+                    Container(
+                      height: 35,
+                      color: Colors.yellow,
+                    ),
+                ],
               ),
             ),
           ],
