@@ -210,7 +210,22 @@ class DiaCalendari extends StatelessWidget {
                   for (int i = 9; i < 22; i++)
                     Container(
                       height: 35,
-                      color: Colors.yellow,
+                      child: (i == 9 &&
+                              docs[0]['final']
+                                      .toDate()
+                                      .toString()
+                                      .split(" ")[1] ==
+                                  "09:00:00.000")
+                          ? RaisedButton(
+                              onPressed: () {},
+                              color: Colors.blue[100],
+                              child: Center(
+                                  child: Text(docs[0]['final']
+                                      .toDate()
+                                      .toString()
+                                      .split(" ")[0])),
+                            )
+                          : SizedBox(),
                     ),
                 ],
               ),
