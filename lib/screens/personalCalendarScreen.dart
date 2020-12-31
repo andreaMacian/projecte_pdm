@@ -61,85 +61,114 @@ class PersonalCalendarScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final item = llistaActCompletes[index];
 
-                    return Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Container(
-                        height: 90,
-                        child: ListTile(
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(children: [
-                                    Text(
-                                    item['inici']
-                                        .toDate()
-                                        .day
-                                        .toString(), //no sé comm imprimir la data com volem: DL 10:00 - 11:00h
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text('.'),
-                                  Text(
-                                    item['inici']
-                                        .toDate()
-                                        .month
-                                        .toString(), //no sé comm imprimir la data com volem: DL 10:00 - 11:00h
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(' de '),
-Text(
-                                    item['inici']
-                                        .toDate()
-                                        .hour
-                                        .toString(), //no sé comm imprimir la data com volem: DL 10:00 - 11:00h
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-Text(' a '),
-Text(
-                                    item['final']
-                                        .toDate()
-                                        .hour
-                                        .toString(), //no sé comm imprimir la data com volem: DL 10:00 - 11:00h
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-
-                                ]),
-                                Text(item['tipus']),
-                                Text(
-                                  item['lloc'],
-                                  style: TextStyle(color: Colors.grey[500]),
-                                )
-                              ],
-                            ),
-                            trailing: Icon(Icons.remove),
-                            leading: Container(
-                                child: Image.asset(
-                              '${item['tipus']}.png',
-                              fit: BoxFit.cover,
-                            ))),
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey[300],
-                              offset: new Offset(0.0, 1.0),
-                              blurRadius: 50.0,
-                            ),
-                          ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    );
+                    return ActivitatInscrita(item: item);
                   },
                 );
               });
         });
+  }
+}
+
+class ActivitatInscrita extends StatefulWidget {
+  const ActivitatInscrita({
+    Key key,
+    @required this.item,
+  }) : super(key: key);
+
+  final item;
+
+  @override
+  _ActivitatInscritaState createState() => _ActivitatInscritaState();
+}
+
+class _ActivitatInscritaState extends State<ActivitatInscrita> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Container(
+        height: 90,
+        child: ListTile(
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(children: [
+                  Text(
+                    widget.item['inici']
+                        .toDate()
+                        .day
+                        .toString(), 
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text('/'),
+                  Text(
+                    widget.item['inici']
+                        .toDate()
+                        .month
+                        .toString(), 
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(' de '),
+                  Text(
+                    widget.item['inici']
+                        .toDate()
+                        .hour
+                        .toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(' a '),
+                  Text(
+                    widget.item['final']
+                        .toDate()
+                        .hour
+                        .toString(), 
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ]),
+                SizedBox(
+                  height: 3,
+                ),
+                Text(widget.item['tipus']),
+                SizedBox(
+                  height: 3,
+                ),
+                Text(
+                  widget.item['lloc'],
+                  style: TextStyle(color: Colors.grey[500]),
+                )
+              ],
+            ),
+            trailing: FlatButton(
+              onPressed: () {},
+              child: Icon(Icons.remove),
+            ),
+            leading: Container(
+                width: 80,
+                child: Image.asset(
+                  '${widget.item['tipus']}.png',
+                  fit: BoxFit.contain,
+                ))),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[300],
+              offset: new Offset(0.0, 1.0),
+              blurRadius: 50.0,
+            ),
+          ],
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
   }
 }
