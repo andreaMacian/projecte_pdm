@@ -67,8 +67,27 @@ class GlobalCalendarScreen extends StatelessWidget {
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: [
+                            /*
+                            EL QUE HI HAVIA ABANS
                             for (int i = 1; i < 7; i++)
                               DiaCalendari(docs: docs, dia: i)
+                            */
+                            DiaCalendari2(
+                                docs: docs, nom: 'DILLUNS', acth: [10, 'Ioga']),
+                            DiaCalendari2(
+                                docs: docs,
+                                nom: 'DIMARTS',
+                                acth: [13, 'Calistenia', 16, 'Crossfit']),
+                            DiaCalendari2(
+                                docs: docs,
+                                nom: 'DIMECRES',
+                                acth: [12, 'Spinning']),
+                            DiaCalendari2(docs: docs, nom: 'DIJOUS'),
+                            DiaCalendari2(
+                                docs: docs,
+                                nom: 'DIVENDRES',
+                                acth: [9, 'Kickboxing']),
+                            DiaCalendari2(docs: docs, nom: 'DISSABTE'),
                           ],
                         ),
                       ),
@@ -121,7 +140,7 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
                   ),
                 ),
                 Text(
-                  'Setmana 1',
+                  'Setmana 3',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -142,7 +161,75 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
   }
 }
 
-class DiaCalendari extends StatelessWidget {
+class DiaCalendari2 extends StatelessWidget {
+  final List<QueryDocumentSnapshot> docs;
+  final String nom;
+  final List<dynamic> acth;
+  DiaCalendari2(
+      {@required this.docs, @required this.nom, this.acth = const []});
+
+  Widget activity(bool acthb, List<dynamic> acth, int i) {
+    final int indeex = acth.indexOf(i) + 1;
+    return Container(
+      height: 35,
+      child: acthb
+          ? RaisedButton(
+              onPressed: () {},
+              color: Colors.blue[100],
+              child: Center(
+                child: Text('${acth[indeex]}'),
+              ),
+            )
+          : SizedBox(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Container(
+        width: 140,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[300],
+              offset: new Offset(0.0, 1.0),
+              blurRadius: 50.0,
+            ),
+          ],
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          children: [
+            Container(
+              child: Text(
+                this.nom,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              height: 40,
+              alignment: Alignment.center,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  for (int i = 9; i < 22; i++)
+                    activity(acth.contains(i), acth, i),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/*class DiaCalendari extends StatelessWidget {
   DiaCalendari({
     Key key,
     @required this.docs,
@@ -189,20 +276,6 @@ class DiaCalendari extends StatelessWidget {
               height: 40,
               alignment: Alignment.center,
             ),
-            //EL QUE HI HAVIA ABANS
-            /*Expanded(
-              child: ListView.builder(
-                itemCount: docs.length,
-                itemBuilder: (context, index) {
-                  final item = docs[index];
-                  return ListTile(
-                    title: Text(
-                      item['tipus'],
-                    ),
-                  );
-                },
-              ),
-            ),*/
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -235,4 +308,4 @@ class DiaCalendari extends StatelessWidget {
       ),
     );
   }
-}
+}*/
