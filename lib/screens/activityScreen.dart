@@ -22,9 +22,18 @@ class _ActivityState extends State<Activity> {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            color: Colors.black,//passar a trasparent
-          ),
+          FlatButton(
+            child: 
+              Container (
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+              ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); //de moment torna a la structureApp
+                  //screen = 2; //si vens del personal calendar hauria de ser screen = 1
+                }
+              ),
           Center(
             child: Container( 
               height: 400,
