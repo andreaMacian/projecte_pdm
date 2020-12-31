@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'activityScreen.dart';
 
 class PersonalCalendarScreen extends StatelessWidget {
   const PersonalCalendarScreen({
@@ -148,8 +149,12 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
               ],
             ),
             trailing: FlatButton(
-              onPressed: () {},
               child: Icon(Icons.remove),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ActivityScreen(),
+                ),);
+              },
             ),
             leading: Container(
                 width: 80,
