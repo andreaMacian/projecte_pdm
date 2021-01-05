@@ -45,18 +45,21 @@ class GlobalCalendarScreen extends StatelessWidget {
                               height: 40,
                             ),
                             Expanded(
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  for (int i = 9; i < 22; i++)
-                                    Text(
-                                      '$i:00',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    for (int i = 9; i < 22; i++)
+                                      Text(
+                                        '$i:00',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -171,7 +174,7 @@ class DiaCalendari2 extends StatelessWidget {
   Widget activity(bool acthb, List<dynamic> acth, int i) {
     final int indeex = acth.indexOf(i) + 1;
     return Container(
-      height: 35,
+      height: 34,
       child: acthb
           ? RaisedButton(
               onPressed: () {},
@@ -199,7 +202,8 @@ class DiaCalendari2 extends StatelessWidget {
             ),
           ],
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
         ),
         child: Column(
           children: [
@@ -215,7 +219,7 @@ class DiaCalendari2 extends StatelessWidget {
             ),
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   for (int i = 9; i < 22; i++)
                     activity(acth.contains(i), acth, i),
