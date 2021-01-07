@@ -23,19 +23,17 @@ class _ActivityState extends State<Activity> {
       body: Stack(
         children: [
           FlatButton(
-            child: 
-              Container (
+              child: Container(
                 decoration: BoxDecoration(
                   color: Colors.transparent,
-              ),
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop(); //de moment torna a la structureApp
-                  //screen = 2; //si vens del personal calendar hauria de ser screen = 1
-                }
               ),
+              onPressed: () {
+                Navigator.of(context).pop(); //de moment torna a la structureApp
+                //screen = 2; //si vens del personal calendar hauria de ser screen = 1
+              }),
           Center(
-            child: Container( 
+            child: Container(
               height: 400,
               width: 350,
               decoration: BoxDecoration(
@@ -47,15 +45,15 @@ class _ActivityState extends State<Activity> {
                   Column(
                     children: [
                       FlatButton(
-                        child: Icon(Icons.arrow_back_ios),
-                        onPressed: () {
-                          Navigator.of(context).pop(); //de moment torna a la structureApp
-                          //screen = 2; //si vens del personal calendar hauria de ser screen = 1
-                        }
-                      ),
+                          child: Icon(Icons.arrow_back_ios),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pop(); //de moment torna a la structureApp
+                            //screen = 2; //si vens del personal calendar hauria de ser screen = 1
+                          }),
                     ],
                   ),
-                 //Column [], //Info de l'activitat + botó de inscriure's desinscriure's
+                  //Column [], //Info de l'activitat + botó de inscriure's desinscriure's
                 ],
               ),
             ),

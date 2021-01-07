@@ -1,5 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto/model/activitat.dart';
+
+const List<String> dies_semana = [
+  'DILLUNS',
+  'DIMARTS',
+  'DIMECRES',
+  'DIJOUS',
+  'DIVENDRES',
+  'DISSABTE'
+];
 
 class GlobalCalendarScreen extends StatelessWidget {
   const GlobalCalendarScreen({
@@ -11,7 +21,11 @@ class GlobalCalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final act = FirebaseFirestore.instance.collection('Activitats');
+    final week_start = DateTime(2020, 12, 14);
+    final week_end = DateTime(2020, 12, 20);
+    final act = FirebaseFirestore.instance
+        .collection('Activitats')
+        .where('inici', isGreaterThan: week_start);
 
     return StreamBuilder(
         stream: act.snapshots(),
@@ -21,7 +35,7 @@ class GlobalCalendarScreen extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-          final docs = snapshot.data.docs;
+          final llista_activitats = snapshot.data.docs;
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: Column(
@@ -70,27 +84,21 @@ class GlobalCalendarScreen extends StatelessWidget {
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: [
-                            /*
-                            EL QUE HI HAVIA ABANS
-                            for (int i = 1; i < 7; i++)
-                              DiaCalendari(docs: docs, dia: i)
-                            */
-                            DiaCalendari2(
-                                docs: docs, nom: 'DILLUNS', acth: [10, 'Ioga']),
-                            DiaCalendari2(
-                                docs: docs,
-                                nom: 'DIMARTS',
-                                acth: [13, 'Calistenia', 16, 'Crossfit']),
-                            DiaCalendari2(
-                                docs: docs,
-                                nom: 'DIMECRES',
-                                acth: [12, 'Spinning']),
-                            DiaCalendari2(docs: docs, nom: 'DIJOUS'),
-                            DiaCalendari2(
-                                docs: docs,
-                                nom: 'DIVENDRES',
-                                acth: [9, 'Kickboxing']),
-                            DiaCalendari2(docs: docs, nom: 'DISSABTE'),
+                            for (int i = 0; i < dies_semana.length; i++)
+                              DiaCalendari2(
+                                nom: dies_semana[i],
+                                acth: [
+                                  for (var a in llista_activitats)
+                                    //Hauria d'estar dins del dia
+                                    //fer métode -- passe activitat i data
+                                    //quan cliques <> que es generin els dies
+                                    if (a['inici']
+                                            .toDate()
+                                            .isAfter(week_start) &&
+                                        a['inici'].toDate().isBefore(week_end))
+                                      Activitat(a['tipus'], a['inici'].toDate())
+                                ],
+                              )
                           ],
                         ),
                       ),
@@ -165,22 +173,20 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
 }
 
 class DiaCalendari2 extends StatelessWidget {
-  final List<QueryDocumentSnapshot> docs;
   final String nom;
-  final List<dynamic> acth;
-  DiaCalendari2(
-      {@required this.docs, @required this.nom, this.acth = const []});
+  final List<Activitat> acth;
+  DiaCalendari2({@required this.nom, this.acth = const []});
 
-  Widget activity(bool acthb, List<dynamic> acth, int i) {
-    final int indeex = acth.indexOf(i) + 1;
+  Widget activity(List<Activitat> acth, int hora) {
+    final int index = acth.indexWhere((a) => a.data.hour == hora);
     return Container(
       height: 34,
-      child: acthb
+      child: index != -1
           ? RaisedButton(
               onPressed: () {},
               color: Colors.blue[100],
               child: Center(
-                child: Text('${acth[indeex]}'),
+                child: Text('${acth[index].nom}'),
               ),
             )
           : SizedBox(),
@@ -221,8 +227,7 @@ class DiaCalendari2 extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  for (int i = 9; i < 22; i++)
-                    activity(acth.contains(i), acth, i),
+                  for (int hora = 9; hora < 22; hora++) activity(acth, hora),
                 ],
               ),
             ),
