@@ -26,7 +26,7 @@ class _ActivityState extends State<Activity> {
             child: 
               Container (
                 decoration: BoxDecoration(
-                  color: Colors.transparent,
+                  color: Colors.transparent, //No surt transparent (Que es vegi la pantalla anterior) He probat també de fer-ho amb el opacity
               ),
                 ),
                 onPressed: () {
@@ -49,21 +49,23 @@ class _ActivityState extends State<Activity> {
                       FlatButton(
                         child: Icon(Icons.arrow_back_ios),
                         onPressed: () {
-                          Navigator.of(context).pop(); //de moment torna a la structureApp
-                          //screen = 2; //si vens del personal calendar hauria de ser screen = 1
+                          Navigator.of(context).pop(); //de moment surt una pantalla negra 
+                          //screen = 2; //si vens del personal calendar hauria de ser screen = 1? o al fer pop ja hauria de funcionar?
                         }
                       ),
                     ],
                   ),
                   Column(
-                    children: [
+                    children: [/*Per que apareguin els icones, noms i informació de l'activitat que hem clicat
+                     ho puc fer amb un this.?
+                     O també m'haig de baixar totes les dades del firebase i seleccinor l'activitat clicada?*/
                       Container(
                         height:30,
-                        child: RaisedButton(
-                          onPressed: () {},
+                        child: RaisedButton( //Que aparegui el botó de inscripció en el cas que vinguis del globalCalendar
+                          onPressed: () {}, //Que actualitzi les dades (+RunTransaction!!)
                             color: Colors.blue[100],
                             child: Center(
-                              child: Text('CANCEL·LAR INSCRIPCIÓ'),
+                              child: Text('CANCEL·LAR INSCRIPCIÓ'), //Pantalla de confirmar desinscripció
                             ),
                         ),
                       ),
@@ -77,3 +79,7 @@ class _ActivityState extends State<Activity> {
     );
   }
 }
+/*
+Em falta fer Navigator.of en els RaisedButtons de les activitats del global calendar 
+(No em deixa, crec que haig de fer un widjed d'aquests raisedButtons)
+*/
