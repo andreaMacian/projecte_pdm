@@ -30,7 +30,7 @@ class _ActivityState extends State<Activity> {
               ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop(); //de moment torna a la structureApp
+                  Navigator.of(context).pop(); // torna a la PersonalCalendarScreen pero apareix una pantalla negra entre mig
                   //screen = 2; //si vens del personal calendar hauria de ser screen = 1
                 }
               ),
@@ -55,7 +55,19 @@ class _ActivityState extends State<Activity> {
                       ),
                     ],
                   ),
-                 //Column [], //Info de l'activitat + botó de inscriure's desinscriure's
+                  Column(
+                    children: [
+                      Container(
+                        height:30,
+                        child: RaisedButton(
+                          onPressed: () {},
+                            color: Colors.blue[100],
+                            child: Center(
+                              child: Text('CANCEL·LAR INSCRIPCIÓ'),
+                            ),
+                        ),
+                      ),
+                  ],), 
                 ],
               ),
             ),
