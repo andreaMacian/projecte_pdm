@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto/model/activitat.dart';
- 
+
+import 'activityScreen.dart';
+
 const List<String> dies_semana = [
   'DILLUNS',
   'DIMARTS',
@@ -10,15 +12,15 @@ const List<String> dies_semana = [
   'DIVENDRES',
   'DISSABTE'
 ];
- 
+
 class GlobalCalendarScreen extends StatelessWidget {
   const GlobalCalendarScreen({
     Key key,
     this.docs,
   }) : super(key: key);
- 
+
   final List<QueryDocumentSnapshot> docs;
- 
+
   @override
   Widget build(BuildContext context) {
     final week_start = DateTime(2020, 12, 14);
@@ -26,7 +28,7 @@ class GlobalCalendarScreen extends StatelessWidget {
     final act = FirebaseFirestore.instance
         .collection('Activitats')
         .where('inici', isGreaterThan: week_start);
- 
+
     return StreamBuilder(
         stream: act.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -96,7 +98,15 @@ class GlobalCalendarScreen extends StatelessWidget {
                                             .toDate()
                                             .isAfter(week_start) &&
                                         a['inici'].toDate().isBefore(week_end))
-                                      Activitat(a['tipus'], a['inici'].toDate())
+                                      Activitat(
+                                        a['tipus'],
+                                        a['inici'].toDate(),
+                                        a['final'].toDate(),
+                                        a['lloc'],
+                                        a['entrenador'],
+                                        a['max_assis'],
+                                        a['num_assis'],
+                                      )
                                 ],
                               )
                           ],
@@ -111,12 +121,12 @@ class GlobalCalendarScreen extends StatelessWidget {
         });
   }
 }
- 
+
 class CanviSetmanaCalendari extends StatefulWidget {
   @override
   _CanviSetmanaCalendariState createState() => _CanviSetmanaCalendariState();
 }
- 
+
 class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
   @override
   Widget build(BuildContext context) {
@@ -171,19 +181,31 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
     );
   }
 }
- 
-class DiaCalendari2 extends StatelessWidget {
+
+class DiaCalendari2 extends StatefulWidget {
   final String nom;
   final List<Activitat> acth;
   DiaCalendari2({@required this.nom, this.acth = const []});
- 
+
+  @override
+  _DiaCalendari2State createState() => _DiaCalendari2State();
+}
+
+class _DiaCalendari2State extends State<DiaCalendari2> {
   Widget activity(List<Activitat> acth, int hora) {
-    final int index = acth.indexWhere((a) => a.data.hour == hora);
+    final int index = acth.indexWhere((a) => a.dataInici.hour == hora);
     return Container(
       height: 34,
       child: index != -1
           ? RaisedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ActivityScreen(acth[index],
+                        false), //mandamos la actividad 'seleccionada'
+                  ),
+                );
+              },
               color: Colors.blue[100],
               child: Center(
                 child: Text('${acth[index].nom}'),
@@ -192,7 +214,7 @@ class DiaCalendari2 extends StatelessWidget {
           : SizedBox(),
     );
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -215,7 +237,7 @@ class DiaCalendari2 extends StatelessWidget {
           children: [
             Container(
               child: Text(
-                this.nom,
+                this.widget.nom,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -227,7 +249,8 @@ class DiaCalendari2 extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  for (int hora = 9; hora < 22; hora++) activity(acth, hora),
+                  for (int hora = 9; hora < 22; hora++)
+                    activity(widget.acth, hora),
                 ],
               ),
             ),
@@ -237,7 +260,7 @@ class DiaCalendari2 extends StatelessWidget {
     );
   }
 }
- 
+
 /*class DiaCalendari extends StatelessWidget {
   DiaCalendari({
     Key key,
@@ -318,4 +341,3 @@ class DiaCalendari2 extends StatelessWidget {
     );
   }
 }*/
-

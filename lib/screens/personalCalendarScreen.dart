@@ -2,6 +2,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto/model/activitat.dart';
+import 'package:proyecto/screens/structureApp.dart';
 import 'activityScreen.dart';
 
 class PersonalCalendarScreen extends StatelessWidget {
@@ -96,40 +98,28 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
               children: [
                 Row(children: [
                   Text(
-                    widget.item['inici']
-                        .toDate()
-                        .day
-                        .toString(), 
+                    widget.item['inici'].toDate().day.toString(),
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text('/'),
                   Text(
-                    widget.item['inici']
-                        .toDate()
-                        .month
-                        .toString(), 
+                    widget.item['inici'].toDate().month.toString(),
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(' de '),
                   Text(
-                    widget.item['inici']
-                        .toDate()
-                        .hour
-                        .toString(),
+                    widget.item['inici'].toDate().hour.toString(),
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(' a '),
                   Text(
-                    widget.item['final']
-                        .toDate()
-                        .hour
-                        .toString(), 
+                    widget.item['final'].toDate().hour.toString(),
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
@@ -151,9 +141,21 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
             trailing: FlatButton(
               child: Icon(Icons.remove),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ActivityScreen(),
-                ),);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ActivityScreen(
+                        Activitat(
+                          widget.item['tipus'],
+                          widget.item['inici'].toDate(),
+                          widget.item['final'].toDate(),
+                          widget.item['lloc'],
+                          widget.item['entrenador'],
+                          widget.item['max_assis'],
+                          widget.item['num_assis'],
+                        ),
+                        true), //mandamos la actividad 'seleccionada'
+                  ),
+                );
               },
             ),
             leading: Container(
