@@ -141,7 +141,25 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
             trailing: FlatButton(
               child: Icon(Icons.remove),
               onPressed: () {
-                Navigator.of(context).push(
+                //OPCIÓN 2: (AL VOLVER A LA PANTALLA ANTIGUA SE BLOQUEA LA APP)
+                Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                        opaque: false,
+                        pageBuilder: (BuildContext context, _, __) {
+                          return ActivityScreen(Activitat(
+                          widget.item['tipus'],
+                          widget.item['inici'].toDate(),
+                          widget.item['final'].toDate(),
+                          widget.item['lloc'],
+                          widget.item['entrenador'],
+                          widget.item['max_assis'],
+                          widget.item['num_assis'],
+                        ),
+                        true);
+                        },));
+                //OPCIÓN 1 : (SE PONE LA PANTALLA NEGRA)
+                /*Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => ActivityScreen(
                         Activitat(
@@ -155,7 +173,8 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
                         ),
                         true), //mandamos la actividad 'seleccionada'
                   ),
-                );
+                )*/
+                ; //TENDREMOS QUE PONER EL THEN
               },
             ),
             leading: Container(

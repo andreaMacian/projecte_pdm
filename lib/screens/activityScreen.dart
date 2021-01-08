@@ -27,8 +27,8 @@ class _ActivityState extends State<Activity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white10, //medio transparente
       body: Container(
-        color: Colors.black12, //ha de ser transparent aprox),
         child: Center(
           child: Container(
             height: 400,
@@ -137,8 +137,9 @@ class _ActivityState extends State<Activity> {
                         Container(
                           alignment: Alignment.center,
                           child: RaisedButton(
-                            //Que aparegui el botó de inscripció en el cas que vinguis del globalCalendar
-                            color: Colors.green[300],
+                            color: widget.inscrit
+                                ? Colors.green[100]
+                                : Colors.green[300],
                             child: Text(
                               widget.inscrit
                                   ? 'CANCEL·LAR INSCRIPCIÓ'
@@ -148,7 +149,31 @@ class _ActivityState extends State<Activity> {
                               ),
                             ),
                             onPressed: () {
-                              //Que actualitzi les dades (+RunTransaction!!)
+                              if (widget.inscrit) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text('Confirmació'),
+                                    content:
+                                        Text('Segur que et vols desapuntar?'),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: () {
+                                          //ha de fer la transacció esborrant i després pop
+                                        },
+                                        child: Text('Confirmar'),
+                                      ),
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Cancelar'),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                              //apunta a l'activitat (+RunTransaction!!)
                               Navigator.of(context).pop();
                             },
                           ),
@@ -165,7 +190,3 @@ class _ActivityState extends State<Activity> {
     );
   }
 }
-/*
-Em falta fer Navigator.of en els RaisedButtons de les activitats del global calendar 
-(No em deixa, crec que haig de fer un widjed d'aquests raisedButtons)
-*/
