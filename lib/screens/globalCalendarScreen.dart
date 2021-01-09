@@ -14,7 +14,8 @@ const List<String> dies_semana = [
 ];
 /*final weekstart = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day);// he de fer que aquesta data pugi o baixi a partir de la nostra setmana actual*/
 
-final weekstart = DateTime(2020,12,14);//weekstart provisional per visualitzar containers
+final weekstart =
+    DateTime(2020, 12, 14); //weekstart provisional per visualitzar containers
 
 class GlobalCalendarScreen extends StatelessWidget {
   const GlobalCalendarScreen({
@@ -26,13 +27,19 @@ class GlobalCalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    final weekend = weekstart.add(Duration(days: 6)) ;//data final depen de data inici de manera automatica (ja no l'hem de crear)
-    final act = FirebaseFirestore.instance
-        .collection('Activitats')
-        .where('inici', isGreaterThanOrEqualTo: weekstart);//data inici igual o superior a inici setmana
-        
-    
+    final weekend = weekstart.add(Duration(
+        days:
+            6)); //data final depen de data inici de manera automatica (ja no l'hem de crear)
+    final act = FirebaseFirestore.instance.collection('Activitats').where(
+        'inici',
+        isGreaterThanOrEqualTo:
+            weekstart); //data inici igual o superior a inici setmana
+
+    List<int> diessemana = []; //Llistat amb els dies [14, 15, 16..., 19]
+    for (int i = 0; i < 6; i++) {
+      diessemana.add(weekstart.day + i);
+    }
+
     return StreamBuilder(
         stream: act.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -101,7 +108,9 @@ class GlobalCalendarScreen extends StatelessWidget {
                                     if (a['inici']
                                             .toDate()
                                             .isAfter(weekstart) &&
-                                        a['inici'].toDate().isBefore(weekend))
+                                        a['inici'].toDate().isBefore(weekend) &&
+                                        a['inici'].toDate().day ==
+                                            diessemana[i])
                                       Activitat(
                                         a['tipus'],
                                         a['inici'].toDate(),
@@ -112,7 +121,7 @@ class GlobalCalendarScreen extends StatelessWidget {
                                         a['num_assis'],
                                       )
                                 ],
-                              )
+                              ),
                           ],
                         ),
                       ),
@@ -154,7 +163,8 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
             FlatButton(
               child: Icon(Icons.arrow_back_ios_rounded),
               onPressed: () {
-                weekstart.add(Duration(days: 7));//posem 7 dies al inici de setmana
+                weekstart
+                    .add(Duration(days: 7)); //posem 7 dies al inici de setmana
               },
             ),
             Column(
@@ -180,7 +190,8 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
             FlatButton(
               child: Icon(Icons.arrow_forward_ios_rounded),
               onPressed: () {
-                weekstart.subtract(Duration(days:7)); //treiem 7 dies al inici de setmana 
+                weekstart.subtract(
+                    Duration(days: 7)); //treiem 7 dies al inici de setmana
               },
             ),
           ],
