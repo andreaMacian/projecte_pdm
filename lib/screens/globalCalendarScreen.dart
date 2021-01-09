@@ -12,12 +12,22 @@ const List<String> dies_semana = [
   'DIVENDRES',
   'DISSABTE'
 ];
-/*final weekstart = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day);// he de fer que aquesta data pugi o baixi a partir de la nostra setmana actual*/
 
-final weekstart =
-    DateTime(2020, 12, 14); //weekstart provisional per visualitzar containers
+final actualDate =
+    DateTime(2020, 12, 14); //dataAvui (dilluns de la setmana actual)
 
-class GlobalCalendarScreen extends StatelessWidget {
+int numSemana = 1;
+
+DateTime weekStart =
+    actualDate; //dilluns de la setmana que es mostra al calendari
+
+List<int> numDiaSemana = [
+  for (int i = 0; i < 6; i++) (weekStart.day + i)
+]; //Llistat amb els dies [14, 15, 16..., 19]
+
+var weekEnd = weekStart.add(Duration(days: 6));
+
+class GlobalCalendarScreen extends StatefulWidget {
   const GlobalCalendarScreen({
     Key key,
     this.docs,
@@ -26,19 +36,17 @@ class GlobalCalendarScreen extends StatelessWidget {
   final List<QueryDocumentSnapshot> docs;
 
   @override
+  _GlobalCalendarScreenState createState() => _GlobalCalendarScreenState();
+}
+
+class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
+  @override
   Widget build(BuildContext context) {
-    final weekend = weekstart.add(Duration(
-        days:
-            6)); //data final depen de data inici de manera automatica (ja no l'hem de crear)
+    //data final depen de data inici de manera automatica (ja no l'hem de crear)
     final act = FirebaseFirestore.instance.collection('Activitats').where(
         'inici',
         isGreaterThanOrEqualTo:
-            weekstart); //data inici igual o superior a inici setmana
-
-    List<int> diessemana = []; //Llistat amb els dies [14, 15, 16..., 19]
-    for (int i = 0; i < 6; i++) {
-      diessemana.add(weekstart.day + i);
-    }
+            actualDate); //data inici igual o superior a inici setmana
 
     return StreamBuilder(
         stream: act.snapshots(),
@@ -99,7 +107,7 @@ class GlobalCalendarScreen extends StatelessWidget {
                           children: [
                             for (int i = 0; i < dies_semana.length; i++)
                               DiaCalendari2(
-                                nom: dies_semana[i],
+                                nom: dies_semana[i] + '${numDiaSemana[i]}',
                                 acth: [
                                   for (var a in llistaActivitats)
                                     //Hauria d'estar dins del dia
@@ -107,10 +115,10 @@ class GlobalCalendarScreen extends StatelessWidget {
                                     //quan cliques <> que es generin els dies
                                     if (a['inici']
                                             .toDate()
-                                            .isAfter(weekstart) &&
-                                        a['inici'].toDate().isBefore(weekend) &&
+                                            .isAfter(weekStart) &&
+                                        a['inici'].toDate().isBefore(weekEnd) &&
                                         a['inici'].toDate().day ==
-                                            diessemana[i])
+                                            numDiaSemana[i])
                                       Activitat(
                                         a['tipus'],
                                         a['inici'].toDate(),
@@ -163,8 +171,13 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
             FlatButton(
               child: Icon(Icons.arrow_back_ios_rounded),
               onPressed: () {
-                weekstart
-                    .add(Duration(days: 7)); //posem 7 dies al inici de setmana
+                setState(() {
+                  if (numSemana > 1) {
+                    numSemana--;
+                    weekStart = DateTime(weekStart.year, weekStart.month,
+                        weekStart.day - 7); //quitamos 7 dias
+                  }
+                });
               },
             ),
             Column(
@@ -177,7 +190,7 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
                   ),
                 ),
                 Text(
-                  'Setmana 3',
+                  'Setmana $numSemana',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -190,8 +203,11 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
             FlatButton(
               child: Icon(Icons.arrow_forward_ios_rounded),
               onPressed: () {
-                weekstart.subtract(
-                    Duration(days: 7)); //treiem 7 dies al inici de setmana
+                setState(() {
+                  numSemana++;
+                  weekStart = DateTime(weekStart.year, weekStart.month,
+                      weekStart.day + 7); //añadimos 7 dias
+                });
               },
             ),
           ],
