@@ -12,6 +12,9 @@ const List<String> dies_semana = [
   'DIVENDRES',
   'DISSABTE'
 ];
+/*final weekstart = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day);// he de fer que aquesta data pugi o baixi a partir de la nostra setmana actual*/
+
+final weekstart = DateTime(2020,12,14);//weekstart provisional per visualitzar containers
 
 class GlobalCalendarScreen extends StatelessWidget {
   const GlobalCalendarScreen({
@@ -23,12 +26,13 @@ class GlobalCalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final week_start = DateTime(2020, 12, 14);
-    final week_end = DateTime(2020, 12, 20);
+    
+    final weekend = weekstart.add(Duration(days: 6)) ;//data final depen de data inici de manera automatica (ja no l'hem de crear)
     final act = FirebaseFirestore.instance
         .collection('Activitats')
-        .where('inici', isGreaterThan: week_start);
-
+        .where('inici', isGreaterThanOrEqualTo: weekstart);//data inici igual o superior a inici setmana
+        
+    
     return StreamBuilder(
         stream: act.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -37,7 +41,7 @@ class GlobalCalendarScreen extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-          final llista_activitats = snapshot.data.docs;
+          final llistaActivitats = snapshot.data.docs;
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: Column(
@@ -90,14 +94,14 @@ class GlobalCalendarScreen extends StatelessWidget {
                               DiaCalendari2(
                                 nom: dies_semana[i],
                                 acth: [
-                                  for (var a in llista_activitats)
+                                  for (var a in llistaActivitats)
                                     //Hauria d'estar dins del dia
                                     //fer métode -- passe activitat i data
                                     //quan cliques <> que es generin els dies
                                     if (a['inici']
                                             .toDate()
-                                            .isAfter(week_start) &&
-                                        a['inici'].toDate().isBefore(week_end))
+                                            .isAfter(weekstart) &&
+                                        a['inici'].toDate().isBefore(weekend))
                                       Activitat(
                                         a['tipus'],
                                         a['inici'].toDate(),
@@ -149,7 +153,9 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
           children: [
             FlatButton(
               child: Icon(Icons.arrow_back_ios_rounded),
-              onPressed: () {},
+              onPressed: () {
+                weekstart.add(Duration(days: 7));//posem 7 dies al inici de setmana
+              },
             ),
             Column(
               children: [
@@ -173,7 +179,9 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
             ),
             FlatButton(
               child: Icon(Icons.arrow_forward_ios_rounded),
-              onPressed: () {},
+              onPressed: () {
+                weekstart.subtract(Duration(days:7)); //treiem 7 dies al inici de setmana 
+              },
             ),
           ],
         ),
