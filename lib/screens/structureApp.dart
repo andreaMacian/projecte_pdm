@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:proyecto/screens/activityScreen.dart';
 
+import 'filterScreen.dart';
 import 'globalCalendarScreen.dart';
 import 'newsScreen.dart';
 import 'personalCalendarScreen.dart';
@@ -57,7 +57,11 @@ class _MyHomePageState extends State<MyHomePage> {
           (screen == 1)
               ? IconButton(
                   icon: Icon(Icons.filter_alt_outlined),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => FilterScreen(), 
+                  ));
+                  },
                 )
               : (screen == 2)
                   ? IconButton(

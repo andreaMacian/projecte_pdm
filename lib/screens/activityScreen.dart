@@ -9,7 +9,7 @@ class ActivityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'GimnàsApp test xavi',
+      title: 'activityScreen',
       home: Activity(activitat, inscrit),
     );
   }
