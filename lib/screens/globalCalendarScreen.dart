@@ -239,7 +239,7 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
                     builder: (context) => ActivityScreen(acth[index],
                         false), //mandamos la actividad 'seleccionada'
                   ),
-                );
+                ).then((value) => null);
               },
               color: Colors.blue[100],
               child: Center(

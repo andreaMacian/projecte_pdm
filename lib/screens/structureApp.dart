@@ -58,9 +58,15 @@ class _MyHomePageState extends State<MyHomePage> {
               ? IconButton(
                   icon: Icon(Icons.filter_alt_outlined),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => FilterScreen(), 
-                  ));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                      builder: (context) => FilterScreen(),
+                    ))
+                        .then((actsFiltre) {
+                      for (int i = 0; i < actsFiltre.lenght; i++) {
+                        //aqui la llamada al metodo de filtro que creemos
+                      }
+                    }); //on possa null hem de ficar el que fem amb les activitats del filtre: enviar la llista al globalCalendar y que només mostri si el nom de les activ mostrades en general, es =
                   },
                 )
               : (screen == 2)
