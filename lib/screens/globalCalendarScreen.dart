@@ -13,12 +13,12 @@ const List<String> dies_semana = [
   'DISSABTE'
 ];
 
-Map <String, Color> colorsActivitat = {
-    'Spinning': Colors.purple[100],
-    'Calistenia': Colors.indigo,
-    'Kickboxing': Colors.blueAccent,
-    'Ioga': Colors.amber,
-    'Crossfit': Colors.green[300]
+Map<String, Color> colorsActivitat = {
+  'Spinning': Colors.purple[100],
+  'Calistenia': Colors.indigo,
+  'Kickboxing': Colors.blueAccent,
+  'Ioga': Colors.amber,
+  'Crossfit': Colors.green[300]
 };
 
 final actualDate =
@@ -36,18 +36,31 @@ List<int> numDiaSemana = [
 var weekEnd = weekStart.add(Duration(days: 6));
 
 class GlobalCalendarScreen extends StatefulWidget {
-  const GlobalCalendarScreen({
+  /*const GlobalCalendarScreen({
     Key key,
     this.docs,
-  }) : super(key: key);
+  }) : super(key: key);*/
 
+  final List<String> filtre = [];
   final List<QueryDocumentSnapshot> docs;
+
+  GlobalCalendarScreen({this.docs, List<String> listaFiltro}) {
+    if (listaFiltro == null || listaFiltro.length == 0)
+      filtre
+          .addAll(['Spinning', 'Calistenia', 'Kickboxing', 'Ioga', 'Crossfit']);
+    else {
+      for (int i = 0; i < listaFiltro.length; i++) {
+        filtre.add(listaFiltro[i]);
+      }
+    }
+  }
 
   @override
   _GlobalCalendarScreenState createState() => _GlobalCalendarScreenState();
 }
 
 class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
+
   @override
   Widget build(BuildContext context) {
     //data final depen de data inici de manera automatica (ja no l'hem de crear)
@@ -126,7 +139,8 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
                                             .isAfter(weekStart) &&
                                         a['inici'].toDate().isBefore(weekEnd) &&
                                         a['inici'].toDate().day ==
-                                            numDiaSemana[i])
+                                            numDiaSemana[i] &&
+                                        widget.filtre.contains(a['tipus']))
                                       Activitat(
                                         a['tipus'],
                                         a['inici'].toDate(),
@@ -229,7 +243,6 @@ class DiaCalendari2 extends StatefulWidget {
   final String nom;
   final List<Activitat> acth;
   DiaCalendari2({@required this.nom, this.acth = const []});
-
   @override
   _DiaCalendari2State createState() => _DiaCalendari2State();
 }
@@ -242,15 +255,17 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
       child: index != -1
           ? RaisedButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    maintainState: true,
-                    builder: (context) => ActivityScreen(acth[index],
-                        false), //mandamos la actividad 'seleccionada'
-                  ),
-                ).then((value) => null);
+                Navigator.of(context)
+                    .push(
+                      MaterialPageRoute(
+                        maintainState: true,
+                        builder: (context) => ActivityScreen(acth[index],
+                            false), //mandamos la actividad 'seleccionada'
+                      ),
+                    )
+                    .then((value) => null);
               },
-              color: colorsActivitat[acth[index].nom],//Colors.blue[100],
+              color: colorsActivitat[acth[index].nom], //Colors.blue[100],
               child: Center(
                 child: Text('${acth[index].nom}'),
               ),
