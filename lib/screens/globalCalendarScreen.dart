@@ -24,14 +24,17 @@ Map<String, Color> colorsActivitat = {
 final actualDate =
     DateTime(2020, 12, 14); //dataAvui (dilluns de la setmana actual)
 
-int numSemana = 3;
-
 DateTime weekStart =
     actualDate; //dilluns de la setmana que es mostra al calendari
 
-List<int> numDiaSemana = [
+var numDiaSem = List<DateTime>.generate(
+    7,
+    (i) => DateTime(weekStart.year, weekStart.month, weekStart.day)
+        .add(Duration(days: i)));
+
+/*List<int> numDiaSemana = [
   for (int i = 0; i < 6; i++) (weekStart.day + i)
-]; //Llistat amb els dies [14, 15, 16..., 19]
+]; //Llistat amb els dies [14, 15, 16..., 19]*/
 
 var weekEnd = weekStart.add(Duration(days: 6));
 
@@ -127,7 +130,8 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
                           children: [
                             for (int i = 0; i < dies_semana.length; i++)
                               DiaCalendari2(
-                                nom: dies_semana[i] + '${numDiaSemana[i]}',
+                                nom: dies_semana[i] + '${numDiaSem[i].day}',
+                                //nom: dies_semana[i] + '${numDiaSemana[i]}',
                                 acth: [
                                   for (var a in llistaActivitats)
                                     //Hauria d'estar dins del dia
@@ -138,7 +142,7 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
                                             .isAfter(weekStart) &&
                                         a['inici'].toDate().isBefore(weekEnd) &&
                                         a['inici'].toDate().day ==
-                                            numDiaSemana[i] &&
+                                            numDiaSem[i].day &&
                                         widget.filtre.contains(a['tipus']))
                                       Activitat(
                                         a['tipus'],
@@ -193,14 +197,13 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
               child: Icon(Icons.arrow_back_ios_rounded),
               onPressed: () {
                 setState(() {
-                  if (numSemana > 1) {
-                    numSemana--;
-                    weekStart = weekStart.add(Duration(days: -7));
-                    weekEnd = weekStart.add(Duration(days: 6));
-                    numDiaSemana = [
-                      for (int i = 0; i < 6; i++) (weekStart.day + i)
-                    ];
-                  }
+                  weekStart = weekStart.add(Duration(days: -7));
+                  weekEnd = weekStart.add(Duration(days: 6));
+                  numDiaSem = List<DateTime>.generate(
+                      7,
+                      (i) => DateTime(
+                              weekStart.year, weekStart.month, weekStart.day)
+                          .add(Duration(days: i)));
                 });
               },
             ),
@@ -214,7 +217,7 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
                   ),
                 ),
                 Text(
-                  'Setmana $numSemana',
+                  'Setmana ${numDiaSem[0].day} / ${numDiaSem[0].month} / ${numDiaSem[0].year}',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -228,12 +231,13 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
               child: Icon(Icons.arrow_forward_ios_rounded),
               onPressed: () {
                 setState(() {
-                  numSemana++;
                   weekStart = weekStart.add(Duration(days: 7));
                   weekEnd = weekStart.add(Duration(days: 6));
-                  numDiaSemana = [
-                    for (int i = 0; i < 6; i++) (weekStart.day + i)
-                  ];
+                  numDiaSem = List<DateTime>.generate(
+                      7,
+                      (i) => DateTime(
+                              weekStart.year, weekStart.month, weekStart.day)
+                          .add(Duration(days: i)));
                 });
               },
             ),
