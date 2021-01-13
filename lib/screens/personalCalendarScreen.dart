@@ -3,8 +3,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto/model/activitat.dart';
-import 'package:proyecto/screens/structureApp.dart';
 import 'activityScreen.dart';
+
+Map<String, Color> colorsActivitat = {
+  'Spinning': Colors.purple[100],
+  'Calistenia': Colors.indigo,
+  'Kickboxing': Colors.blueAccent,
+  'Ioga': Colors.amber,
+  'Crossfit': Colors.green[300]
+};
 
 class PersonalCalendarScreen extends StatelessWidget {
   const PersonalCalendarScreen({
@@ -92,74 +99,76 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
       child: Container(
         height: 90,
         child: ListTile(
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(children: [
-                  Text(
-                    widget.item['inici'].toDate().day.toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text('/'),
-                  Text(
-                    widget.item['inici'].toDate().month.toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(' de '),
-                  Text(
-                    widget.item['inici'].toDate().hour.toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(' a '),
-                  Text(
-                    widget.item['final'].toDate().hour.toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ]),
-                SizedBox(
-                  height: 3,
-                ),
-                Text(widget.item['tipus']),
-                SizedBox(
-                  height: 3,
-                ),
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: [
                 Text(
-                  widget.item['lloc'],
-                  style: TextStyle(color: Colors.grey[500]),
-                )
-              ],
-            ),
-            trailing: FlatButton(
-              child: Icon(Icons.remove),
-              onPressed: () {
-                //OPCIÓN 2: (AL VOLVER A LA PANTALLA ANTIGUA SE BLOQUEA LA APP)
-                Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                        opaque: false,
-                        pageBuilder: (BuildContext context, _, __) {
-                          return ActivityScreen(Activitat(
-                          widget.item['tipus'],
-                          widget.item['inici'].toDate(),
-                          widget.item['final'].toDate(),
-                          widget.item['lloc'],
-                          widget.item['entrenador'],
-                          widget.item['max_assis'],
-                          widget.item['num_assis'],
-                        ),
-                        true);
-                        },));
-                //OPCIÓN 1 : (SE PONE LA PANTALLA NEGRA)
-                /*Navigator.of(context).push(
+                  widget.item['inici'].toDate().day.toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text('/'),
+                Text(
+                  widget.item['inici'].toDate().month.toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(' de '),
+                Text(
+                  widget.item['inici'].toDate().hour.toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(' a '),
+                Text(
+                  widget.item['final'].toDate().hour.toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ]),
+              SizedBox(
+                height: 3,
+              ),
+              Text(widget.item['tipus']),
+              SizedBox(
+                height: 3,
+              ),
+              Text(
+                widget.item['lloc'],
+                style: TextStyle(color: Colors.grey[500]),
+              )
+            ],
+          ),
+          trailing: FlatButton(
+            child: Icon(Icons.remove),
+            onPressed: () {
+              //OPCIÓN 2: (AL VOLVER A LA PANTALLA ANTIGUA SE BLOQUEA LA APP)
+              Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    opaque: false,
+                    pageBuilder: (BuildContext context, _, __) {
+                      return ActivityScreen(
+                          Activitat(
+                            widget.item['tipus'],
+                            widget.item['inici'].toDate(),
+                            widget.item['final'].toDate(),
+                            widget.item['lloc'],
+                            widget.item['entrenador'],
+                            widget.item['max_assis'],
+                            widget.item['num_assis'],
+                          ),
+                          true);
+                    },
+                  ));
+              //OPCIÓN 1 : (SE PONE LA PANTALLA NEGRA)
+              /*Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => ActivityScreen(
                         Activitat(
@@ -174,15 +183,18 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
                         true), //mandamos la actividad 'seleccionada'
                   ),
                 )*/
-                ; //TENDREMOS QUE PONER EL THEN
-              },
+               //TENDREMOS QUE PONER EL THEN
+            },
+          ),
+          leading: Container(
+            width: 80,
+            child: Image.asset(
+              '${widget.item['tipus']}.png',
+              fit: BoxFit.contain,
+              color: colorsActivitat[widget.item['tipus']],
             ),
-            leading: Container(
-                width: 80,
-                child: Image.asset(
-                  '${widget.item['tipus']}.png',
-                  fit: BoxFit.contain,
-                ))),
+          ),
+        ),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(

@@ -13,6 +13,14 @@ const List<String> dies_semana = [
   'DISSABTE'
 ];
 
+Map <String, Color> colorsActivitat = {
+    'Spinning': Colors.purple[100],
+    'Calistenia': Colors.indigo,
+    'Kickboxing': Colors.blueAccent,
+    'Ioga': Colors.amber,
+    'Crossfit': Colors.green[300]
+};
+
 final actualDate =
     DateTime(2020, 12, 14); //dataAvui (dilluns de la setmana actual)
 
@@ -236,12 +244,13 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
+                    maintainState: true,
                     builder: (context) => ActivityScreen(acth[index],
                         false), //mandamos la actividad 'seleccionada'
                   ),
                 ).then((value) => null);
               },
-              color: Colors.blue[100],
+              color: colorsActivitat[acth[index].nom],//Colors.blue[100],
               child: Center(
                 child: Text('${acth[index].nom}'),
               ),
