@@ -24,7 +24,7 @@ Map<String, Color> colorsActivitat = {
 final actualDate =
     DateTime(2020, 12, 14); //dataAvui (dilluns de la setmana actual)
 
-int numSemana = 1;
+int numSemana = 3;
 
 DateTime weekStart =
     actualDate; //dilluns de la setmana que es mostra al calendari
@@ -60,7 +60,6 @@ class GlobalCalendarScreen extends StatefulWidget {
 }
 
 class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
-
   @override
   Widget build(BuildContext context) {
     //data final depen de data inici de manera automatica (ja no l'hem de crear)
@@ -196,8 +195,11 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
                 setState(() {
                   if (numSemana > 1) {
                     numSemana--;
-                    weekStart = DateTime(weekStart.year, weekStart.month,
-                        weekStart.day - 7); //quitamos 7 dias
+                    weekStart = weekStart.add(Duration(days: -7));
+                    weekEnd = weekStart.add(Duration(days: 6));
+                    numDiaSemana = [
+                      for (int i = 0; i < 6; i++) (weekStart.day + i)
+                    ];
                   }
                 });
               },
@@ -227,8 +229,11 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
               onPressed: () {
                 setState(() {
                   numSemana++;
-                  weekStart = DateTime(weekStart.year, weekStart.month,
-                      weekStart.day + 7); //añadimos 7 dias
+                  weekStart = weekStart.add(Duration(days: 7));
+                  weekEnd = weekStart.add(Duration(days: 6));
+                  numDiaSemana = [
+                    for (int i = 0; i < 6; i++) (weekStart.day + i)
+                  ];
                 });
               },
             ),
@@ -265,7 +270,7 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
                     )
                     .then((value) => null);
               },
-              color: colorsActivitat[acth[index].nom], //Colors.blue[100],
+              color: colorsActivitat[acth[index].nom],
               child: Center(
                 child: Text('${acth[index].nom}'),
               ),
