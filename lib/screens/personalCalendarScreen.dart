@@ -1,6 +1,7 @@
 //import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto/model/activitat.dart';
 import 'activityScreen.dart';
@@ -25,11 +26,12 @@ class PersonalCalendarScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final activitats = FirebaseFirestore.instance.collection(
         'Activitats'); //recollim dades de firebase amb les activitats
+    //FirebaseDatabase.getInstance().
 
     final inscripcionsUser = FirebaseFirestore.instance
         .collection('Usuaris')
         .doc(
-            'c5Dz89sXkUZ7s77yI8pdPQ6s0Nz1') //preguntar com posar aqui el usuari que esta amb login?????????????
+            '${FirebaseAuth.instance.currentUser.uid}') // '${FirebaseAuth.instance.currentUser}'//'c5Dz89sXkUZ7s77yI8pdPQ6s0Nz1'
         .collection(
             'inscripcions'); //recollim les dades de les inscripcions , en aquest cas nomes d`un usuari
 
@@ -183,7 +185,7 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
                         true), //mandamos la actividad 'seleccionada'
                   ),
                 )*/
-               //TENDREMOS QUE PONER EL THEN
+              //TENDREMOS QUE PONER EL THEN
             },
           ),
           leading: Container(

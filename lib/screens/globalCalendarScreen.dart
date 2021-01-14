@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:proyecto/model/activitat.dart';
 
 import 'activityScreen.dart';
+import 'structureApp.dart';
 
 const List<String> dies_semana = [
   'DILLUNS',
@@ -63,6 +64,8 @@ class GlobalCalendarScreen extends StatefulWidget {
 }
 
 class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
+  
+
   @override
   Widget build(BuildContext context) {
     //data final depen de data inici de manera automatica (ja no l'hem de crear)
@@ -153,7 +156,7 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
                                         a['max_assis'],
                                         a['num_assis'],
                                       )
-                                ],
+                                  ],
                               ),
                           ],
                         ),
@@ -174,6 +177,15 @@ class CanviSetmanaCalendari extends StatefulWidget {
 }
 
 class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
+  Future<Widget> actualitzaCalendar() async {
+    return await Navigator.of(context).push(
+      MaterialPageRoute(
+        maintainState: true,
+        builder: (context) => StructureApp(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -204,6 +216,7 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
                       (i) => DateTime(
                               weekStart.year, weekStart.month, weekStart.day)
                           .add(Duration(days: i)));
+                  actualitzaCalendar();
                 });
               },
             ),
@@ -238,6 +251,7 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
                       (i) => DateTime(
                               weekStart.year, weekStart.month, weekStart.day)
                           .add(Duration(days: i)));
+                  actualitzaCalendar();
                 });
               },
             ),
