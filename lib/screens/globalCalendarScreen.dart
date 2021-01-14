@@ -155,6 +155,7 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
                                         a['entrenador'],
                                         a['max_assis'],
                                         a['num_assis'],
+                                        a.id,
                                       )
                                   ],
                               ),

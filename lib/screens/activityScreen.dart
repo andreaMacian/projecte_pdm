@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto/model/activitat.dart';
 
 class ActivityScreen extends StatelessWidget {
   final activitat;
-  final bool inscrit;
+  bool inscrit;
   ActivityScreen(this.activitat, this.inscrit);
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class ActivityScreen extends StatelessWidget {
 
 class Activity extends StatefulWidget {
   final Activitat activitat;
-  final bool inscrit;
+  bool inscrit;
   Activity(this.activitat, this.inscrit);
   @override
   _ActivityState createState() => _ActivityState();
@@ -149,6 +151,7 @@ class _ActivityState extends State<Activity> {
                               ),
                             ),
                             onPressed: () {
+                              //SI ESTAS INTENTANT CANCEL.LAR:
                               if (widget.inscrit) {
                                 showDialog(
                                   context: context,
@@ -159,7 +162,55 @@ class _ActivityState extends State<Activity> {
                                     actions: <Widget>[
                                       FlatButton(
                                         onPressed: () {
-                                          //ha de fer la transacció esborrant i després pop
+                                          //ha de fer la transacció esborrant ACT DE INSCRIPCIONS USUARI
+                                          //I A USUARI DE L'ACTIVITAT i després pop
+                                          var inscripEnUsuari = FirebaseFirestore
+                                              .instance
+                                              .collection('Usuaris')
+                                              .doc(
+                                                  '${FirebaseAuth.instance.currentUser.uid}')
+                                              .collection('inscripcions')
+                                              .doc(widget.activitat
+                                                  .id); //delate del codigo ese
+
+                                          var inscripEnActivitat =
+                                              FirebaseFirestore
+                                                  .instance
+                                                  .collection('Activitats')
+                                                  .doc(widget.activitat.id)
+                                                  .collection('assistents')
+                                                  .doc(FirebaseAuth
+                                                      .instance
+                                                      .currentUser
+                                                      .uid); //delate
+
+                                          //FirebaseFirestore.instance.collection('Activitats').doc(widget.activitat.id).data().num_assis +1;
+                                          var assistents = FirebaseFirestore
+                                              .instance
+                                              .collection('Activitats')
+                                              .doc(widget.activitat.id);
+
+                                          return FirebaseFirestore.instance
+                                              .runTransaction(
+                                                  (transaction) async {
+                                            FirebaseFirestore.instance
+                                                .runTransaction(
+                                                    (transaction) async {
+                                              await transaction
+                                                  .update(assistents, {
+                                                'num_assis': FieldValue.increment(
+                                                    -1), //restamos un asistente
+                                              });
+                                              await transaction.delete(
+                                                  inscripEnActivitat); //borramos al usuario de la actv
+                                              await transaction.delete(
+                                                  inscripEnUsuari); //borramos la act del usuario
+                                            }).catchError((e) {
+                                              return false;
+                                            });
+                                            widget.inscrit = !widget.inscrit;
+                                            Navigator.of(context).pop();
+                                          });
                                         },
                                         child: Text('Confirmar'),
                                       ),
@@ -173,8 +224,48 @@ class _ActivityState extends State<Activity> {
                                   ),
                                 );
                               }
-                              //apunta a l'activitat (+RunTransaction!!)
-                              Navigator.of(context).pop();
+                              //SI T'ESTAS INTENTANT APUNTAR:
+                              else {/*
+                                //ha de fer la transacció apuntant ACT DE INSCRIPCIONS USUARI
+                                //I A USUARI DE L'ACTIVITAT i després pop
+                                var assistents = FirebaseFirestore.instance
+                                    .collection('Activitats')
+                                    .doc(widget.activitat.id);
+
+                                return FirebaseFirestore.instance
+                                    .runTransaction((transaction) async {
+                                  FirebaseFirestore.instance
+                                      .runTransaction((transaction) async {
+                                    await transaction.update(assistents, {
+                                      'num_assis': FieldValue.increment(
+                                          1), //añadimos un asistente
+                                    });
+
+                                    await FirebaseFirestore.instance
+                                        .collection('Activitats')
+                                        .doc(widget.activitat.id)
+                                        .collection('assistents').add({
+                                      '${FirebaseAuth.instance.currentUser.uid}':
+                                          null
+                                    });
+
+                                    await FirebaseFirestore.instance
+                                        .collection('Usuaris')
+                                        .doc(
+                                            '${FirebaseAuth.instance.currentUser.uid}')
+                                        .collection('inscripcions')
+                                        .add({
+                                      '${widget.activitat.id}':
+                                          null
+                                    });  //añadimos cod actividad a las inscripciones del usuario
+                                  }).catchError((e) {
+                                    return false;
+                                  });
+                                  widget.inscrit = !widget.inscrit;
+                                  Navigator.of(context).pop();
+                                });*/
+                              }
+                              Navigator.of(context).pop();   
                             },
                           ),
                         ),
