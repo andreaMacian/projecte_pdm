@@ -161,7 +161,7 @@ class _ActivityState extends State<Activity> {
                                         Text('Segur que et vols desapuntar?'),
                                     actions: <Widget>[
                                       FlatButton(
-                                        onPressed: () {
+                                        onPressed: () {/*
                                           //ha de fer la transacció esborrant ACT DE INSCRIPCIONS USUARI
                                           //I A USUARI DE L'ACTIVITAT i després pop
                                           var inscripEnUsuari = FirebaseFirestore
@@ -170,20 +170,25 @@ class _ActivityState extends State<Activity> {
                                               .doc(
                                                   '${FirebaseAuth.instance.currentUser.uid}')
                                               .collection('inscripcions')
-                                              .doc(widget.activitat
-                                                  .id); //delate del codigo ese
+                                              .snapshots(); //'idUsuari' : widget.activitat.id
+                                          /*
+                                          for(int i=0; i<inscripEnUsuari; i++){
+                                               FirebaseFirestore
+                                              .instance
+                                              .collection('Usuaris')
+                                              .doc(
+                                                  '${FirebaseAuth.instance.currentUser.uid}')
+                                              .collection('inscripcions')
+                                              .doc[${widget.activitat.id}];
+                                             }*/
 
-                                          var inscripEnActivitat =
-                                              FirebaseFirestore
-                                                  .instance
-                                                  .collection('Activitats')
-                                                  .doc(widget.activitat.id)
-                                                  .collection('assistents')
-                                                  .doc(FirebaseAuth
-                                                      .instance
-                                                      .currentUser
-                                                      .uid); //delate
-
+                                          var inscripEnActivitat = FirebaseFirestore
+                                              .instance
+                                              .collection('Activitats')
+                                              .doc(widget.activitat.id)
+                                              .collection('assistents')
+                                              .doc(); //'idUsuari' : FirebaseAuth.instance.currentUser.uid
+/*
                                           //FirebaseFirestore.instance.collection('Activitats').doc(widget.activitat.id).data().num_assis +1;
                                           var assistents = FirebaseFirestore
                                               .instance
@@ -201,8 +206,7 @@ class _ActivityState extends State<Activity> {
                                                 'num_assis': FieldValue.increment(
                                                     -1), //restamos un asistente
                                               });
-                                              await transaction.delete(
-                                                  inscripEnActivitat); //borramos al usuario de la actv
+                                              await transaction.delete(inscripEnActivitat); //borramos al usuario de la actv
                                               await transaction.delete(
                                                   inscripEnUsuari); //borramos la act del usuario
                                             }).catchError((e) {
@@ -210,7 +214,7 @@ class _ActivityState extends State<Activity> {
                                             });
                                             widget.inscrit = !widget.inscrit;
                                             Navigator.of(context).pop();
-                                          });
+                                          });*/ */
                                         },
                                         child: Text('Confirmar'),
                                       ),
@@ -225,9 +229,24 @@ class _ActivityState extends State<Activity> {
                                 );
                               }
                               //SI T'ESTAS INTENTANT APUNTAR:
-                              else {/*
+                              else {
                                 //ha de fer la transacció apuntant ACT DE INSCRIPCIONS USUARI
                                 //I A USUARI DE L'ACTIVITAT i després pop
+                                //OPCIO 1:
+                                var inscripEnUsuari = FirebaseFirestore.instance
+                                    .collection('Usuaris')
+                                    .doc(
+                                        '${FirebaseAuth.instance.currentUser.uid}')
+                                    .collection('inscripcions')
+                                    .doc();
+
+                                var inscripEnActivitat = FirebaseFirestore
+                                    .instance
+                                    .collection('Activitats')
+                                    .doc(widget.activitat.id)
+                                    .collection('assistents')
+                                    .doc();
+
                                 var assistents = FirebaseFirestore.instance
                                     .collection('Activitats')
                                     .doc(widget.activitat.id);
@@ -240,11 +259,19 @@ class _ActivityState extends State<Activity> {
                                       'num_assis': FieldValue.increment(
                                           1), //añadimos un asistente
                                     });
-
-                                    await FirebaseFirestore.instance
+                                    await transaction.set(inscripEnUsuari, {
+                                      'idActivitat': widget.activitat.id
+                                    }); //añades activ vacía al usuario
+                                    await transaction.set(inscripEnActivitat, {
+                                      'idUsuari':
+                                          FirebaseAuth.instance.currentUser.uid
+                                    }); //añades usuario vacío a la acti
+                                    //OPCIO 2:
+                                    /*await FirebaseFirestore.instance
                                         .collection('Activitats')
                                         .doc(widget.activitat.id)
-                                        .collection('assistents').add({
+                                        .collection('assistents')
+                                        .add({
                                       '${FirebaseAuth.instance.currentUser.uid}':
                                           null
                                     });
@@ -255,17 +282,16 @@ class _ActivityState extends State<Activity> {
                                             '${FirebaseAuth.instance.currentUser.uid}')
                                         .collection('inscripcions')
                                         .add({
-                                      '${widget.activitat.id}':
-                                          null
-                                    });  //añadimos cod actividad a las inscripciones del usuario
+                                      '${widget.activitat.id}': null
+                                    }); */
                                   }).catchError((e) {
                                     return false;
                                   });
                                   widget.inscrit = !widget.inscrit;
                                   Navigator.of(context).pop();
-                                });*/
+                                });
                               }
-                              Navigator.of(context).pop();   
+                              Navigator.of(context).pop();
                             },
                           ),
                         ),

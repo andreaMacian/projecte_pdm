@@ -274,20 +274,28 @@ class DiaCalendari2 extends StatefulWidget {
 class _DiaCalendari2State extends State<DiaCalendari2> {
   Widget activity(List<Activitat> acth, int hora) {
     final int index = acth.indexWhere((a) => a.dataInici.hour == hora);
+
+    bool actInscrita (){ //S'HA DE COMPROBAR SI L'USUARI ESTÀ REGISTRAT A L'ACTIV O NO
+      bool inscrit=false;
+      /*if(FirebaseFirestore.instance.collection('Usuaris').acth[index].id){
+        inscrit=true;
+      }*/
+      return inscrit;
+    }
     return Container(
       height: 34,
       child: index != -1
           ? RaisedButton(
               onPressed: () {
-                Navigator.of(context)
-                    .push(
-                      MaterialPageRoute(
-                        maintainState: true,
-                        builder: (context) => ActivityScreen(acth[index],
-                            false), //mandamos la actividad 'seleccionada'
-                      ),
-                    )
-                    .then((value) => null);
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    opaque: false,
+                    pageBuilder: (BuildContext context, _, __) {
+                      return ActivityScreen(acth[index],
+                            actInscrita()); //mandamos la actividad 'seleccionada'
+                    },
+                  )).then((value) => null);
               },
               color: colorsActivitat[acth[index].nom],
               child: Center(
