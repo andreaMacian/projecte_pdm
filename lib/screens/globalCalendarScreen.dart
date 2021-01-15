@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto/model/activitat.dart';
 
@@ -64,8 +65,6 @@ class GlobalCalendarScreen extends StatefulWidget {
 }
 
 class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
-  
-
   @override
   Widget build(BuildContext context) {
     //data final depen de data inici de manera automatica (ja no l'hem de crear)
@@ -83,6 +82,15 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
             );
           }
           final llistaActivitats = snapshot.data.docs;
+
+          bool actInscrita(var activ) { //////////////////////////////////ACABAR
+            if(activ['num_assis']==0) return false;
+            for(int j=0; j<6;j++){
+              print('$j');
+              return true;
+            }
+          }
+
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: Column(
@@ -157,7 +165,7 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
                                         a['num_assis'],
                                         a.id,
                                       )
-                                  ],
+                                ],
                               ),
                           ],
                         ),
@@ -275,27 +283,22 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
   Widget activity(List<Activitat> acth, int hora) {
     final int index = acth.indexWhere((a) => a.dataInici.hour == hora);
 
-    bool actInscrita (){ //S'HA DE COMPROBAR SI L'USUARI ESTÀ REGISTRAT A L'ACTIV O NO
-      bool inscrit=false;
-      /*if(FirebaseFirestore.instance.collection('Usuaris').acth[index].id){
-        inscrit=true;
-      }*/
-      return inscrit;
-    }
     return Container(
       height: 34,
       child: index != -1
           ? RaisedButton(
               onPressed: () {
                 Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    opaque: false,
-                    pageBuilder: (BuildContext context, _, __) {
-                      return ActivityScreen(acth[index],
-                            actInscrita()); //mandamos la actividad 'seleccionada'
-                    },
-                  )).then((value) => null);
+                    context,
+                    PageRouteBuilder(
+                      opaque: false,
+                      barrierColor: Colors.black87,
+                      pageBuilder: (BuildContext context, _, __) {
+                        return ActivityScreen(
+                            acth[index],
+                            false); //mandamos la actividad 'seleccionada'
+                      },
+                    )).then((value) => null);
               },
               color: colorsActivitat[acth[index].nom],
               child: Center(
@@ -431,4 +434,36 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
       ),
     );
   }
-}*/
+} 
+
+bool actInscrita() {
+      //S'HA DE COMPROBAR SI L'USUARI ESTÀ REGISTRAT A L'ACTIV O NO
+      bool inscrit = false;
+      final act = FirebaseFirestore.instance
+          .collection('Activitats')
+          .doc('${acth[index].id}')
+          .collection('assistents');
+      return StreamBuilder(
+          stream: act.snapshots(),
+          // ignore: missing_return
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            final assistents = snapshot.data.docs;
+            
+            for (int j = 0; j < assistents.length; j++) {
+              //print('$j');
+              if (FirebaseAuth.instance.currentUser.uid ==
+                  assistents[j]['idUsuari']) {
+                inscrit = true;
+                //CREEM UNA LLISTA AMB LA INFO DE LES ACTIVITATS INSCRITES
+              }
+            }
+          });
+      return inscrit;
+    }
+
+*/

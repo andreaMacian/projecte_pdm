@@ -3,29 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto/model/activitat.dart';
 
-class ActivityScreen extends StatelessWidget {
-  final activitat;
-  bool inscrit;
+class ActivityScreen extends StatefulWidget {
+  final Activitat activitat;
+  final bool inscrit;
   ActivityScreen(this.activitat, this.inscrit);
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'activityScreen',
-      home: Activity(activitat, inscrit),
-    );
-  }
+  _ActivityScreenState createState() => _ActivityScreenState();
 }
 
-class Activity extends StatefulWidget {
-  final Activitat activitat;
-  bool inscrit;
-  Activity(this.activitat, this.inscrit);
-  @override
-  _ActivityState createState() => _ActivityState();
-}
-
-class _ActivityState extends State<Activity> {
+class _ActivityScreenState extends State<ActivityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -170,7 +156,9 @@ class _ActivityState extends State<Activity> {
                                               .doc(
                                                   '${FirebaseAuth.instance.currentUser.uid}')
                                               .collection('inscripcions')
-                                              .snapshots(); //'idUsuari' : widget.activitat.id
+                                              .where('idActivitat',
+                                                  isEqualTo:
+                                                      '${widget.activitat.id}'); //'idActivitat' : widget.activitat.id
                                           /*
                                           for(int i=0; i<inscripEnUsuari; i++){
                                                FirebaseFirestore
@@ -187,8 +175,10 @@ class _ActivityState extends State<Activity> {
                                               .collection('Activitats')
                                               .doc(widget.activitat.id)
                                               .collection('assistents')
-                                              .doc(); //'idUsuari' : FirebaseAuth.instance.currentUser.uid
-/*
+                                              .where('idUsuari',
+                                                  isEqualTo:
+                                                      '${FirebaseAuth.instance.currentUser.uid}'); //'idUsuari' : FirebaseAuth.instance.currentUser.uid
+
                                           //FirebaseFirestore.instance.collection('Activitats').doc(widget.activitat.id).data().num_assis +1;
                                           var assistents = FirebaseFirestore
                                               .instance
@@ -212,10 +202,9 @@ class _ActivityState extends State<Activity> {
                                             }).catchError((e) {
                                               return false;
                                             });
-                                            widget.inscrit = !widget.inscrit;
                                             Navigator.of(context).pop();
-                                          });*/ */
-                                        },
+                                          });
+                                        */},
                                         child: Text('Confirmar'),
                                       ),
                                       FlatButton(
@@ -287,7 +276,6 @@ class _ActivityState extends State<Activity> {
                                   }).catchError((e) {
                                     return false;
                                   });
-                                  widget.inscrit = !widget.inscrit;
                                   Navigator.of(context).pop();
                                 });
                               }

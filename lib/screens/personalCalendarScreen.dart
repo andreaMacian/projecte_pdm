@@ -155,6 +155,7 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
                   context,
                   PageRouteBuilder(
                     opaque: false,
+                    barrierColor: Colors.black87,
                     pageBuilder: (BuildContext context, _, __) {
                       return ActivityScreen(
                           Activitat(
