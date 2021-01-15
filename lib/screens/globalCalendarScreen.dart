@@ -23,20 +23,13 @@ Map<String, Color> colorsActivitat = {
   'Crossfit': Colors.green[300]
 };
 
-final actualDate =
+var weekStart =
     DateTime(2020, 12, 14); //dataAvui (dilluns de la setmana actual)
-
-DateTime weekStart =
-    actualDate; //dilluns de la setmana que es mostra al calendari
 
 var numDiaSem = List<DateTime>.generate(
     7,
     (i) => DateTime(weekStart.year, weekStart.month, weekStart.day)
         .add(Duration(days: i)));
-
-/*List<int> numDiaSemana = [
-  for (int i = 0; i < 6; i++) (weekStart.day + i)
-]; //Llistat amb els dies [14, 15, 16..., 19]*/
 
 var weekEnd = weekStart.add(Duration(days: 6));
 
@@ -71,7 +64,7 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
     final act = FirebaseFirestore.instance.collection('Activitats').where(
         'inici',
         isGreaterThanOrEqualTo:
-            actualDate); //data inici igual o superior a inici setmana
+            weekStart); //data inici igual o superior a inici setmana
 
     return StreamBuilder(
         stream: act.snapshots(),
@@ -83,9 +76,10 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
           }
           final llistaActivitats = snapshot.data.docs;
 
-          bool actInscrita(var activ) { //////////////////////////////////ACABAR
-            if(activ['num_assis']==0) return false;
-            for(int j=0; j<6;j++){
+          bool actInscrita(var activ) {
+            //////////////////////////////////ACABAR
+            if (activ['num_assis'] == 0) return false;
+            for (int j = 0; j < 6; j++) {
               print('$j');
               return true;
             }
@@ -150,8 +144,10 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
                                     //quan cliques <> que es generin els dies
                                     if (a['inici']
                                             .toDate()
-                                            .isAfter(weekStart) &&
-                                        a['inici'].toDate().isBefore(weekEnd) &&
+                                            .isAfter(numDiaSem[0]) &&
+                                        a['inici']
+                                            .toDate()
+                                            .isBefore(numDiaSem[6]) &&
                                         a['inici'].toDate().day ==
                                             numDiaSem[i].day &&
                                         widget.filtre.contains(a['tipus']))
@@ -219,7 +215,6 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
               onPressed: () {
                 setState(() {
                   weekStart = weekStart.add(Duration(days: -7));
-                  weekEnd = weekStart.add(Duration(days: 6));
                   numDiaSem = List<DateTime>.generate(
                       7,
                       (i) => DateTime(
@@ -254,7 +249,6 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
               onPressed: () {
                 setState(() {
                   weekStart = weekStart.add(Duration(days: 7));
-                  weekEnd = weekStart.add(Duration(days: 6));
                   numDiaSem = List<DateTime>.generate(
                       7,
                       (i) => DateTime(
@@ -294,8 +288,7 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
                       opaque: false,
                       barrierColor: Colors.black87,
                       pageBuilder: (BuildContext context, _, __) {
-                        return ActivityScreen(
-                            acth[index],
+                        return ActivityScreen(acth[index],
                             false); //mandamos la actividad 'seleccionada'
                       },
                     )).then((value) => null);
