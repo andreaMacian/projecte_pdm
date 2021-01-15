@@ -56,27 +56,38 @@ class _CollapsibleNewState extends State<CollapsibleNew> {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
-        height: (_expanded ? null : 90),
+        padding: const EdgeInsets.only(top: 8),
+        height: (_expanded ? null : 120),
         child: ListTile(
           title: Text(
             widget.item['titol'],
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
           ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                widget.item['contingut'],
-                maxLines: (_expanded ? null : 2),
-              ),
-              FlatButton(
-                child: Icon(_expanded ? Icons.expand_less : Icons.expand_more),
-                onPressed: () {
-                  setState(() {
-                    _expanded = !_expanded;
-                  });
-                },
-              ),
-            ],
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 8.0, right: 5.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  widget.item['contingut'],
+                  maxLines: (_expanded ? null : 2),
+                  overflow: _expanded ? null : TextOverflow.ellipsis,
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(
+                    height: 1.4,
+                  ),
+                ),
+                FlatButton(
+                  child:
+                      Icon(_expanded ? Icons.expand_less : Icons.expand_more),
+                  onPressed: () {
+                    setState(() {
+                      _expanded = !_expanded;
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
           trailing: Icon(
             Icons.warning_outlined,
