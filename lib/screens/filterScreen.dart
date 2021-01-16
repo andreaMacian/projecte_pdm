@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto/screens/structureApp.dart';
 
 class TypeActivities {
   String nomActivity;
@@ -97,7 +98,7 @@ class _FilterScreenState extends State<FilterScreen> {
                       ),
                       onPressed: () {
                         //tiene que enviar el nombre de las actividades marcadas con true
-                        List<String> actsFiltre = [];
+                       // creo la variable actsFiltre a strucureApp.dart
                         for (int i = 0; i < tipusActivitats.length; i++)
                           if (tipusActivitats[i].selected)
                             actsFiltre.add(tipusActivitats[i].nomActivity);

@@ -6,6 +6,8 @@ import 'globalCalendarScreen.dart';
 import 'newsScreen.dart';
 import 'personalCalendarScreen.dart';
 
+ List<String> actsFiltre = [];
+
 class StructureApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -42,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else if (screen == 1) {
       //calendar global
       //Aquí anirà el widget del calendari global
-      mainwidget = GlobalCalendarScreen();
+      mainwidget = GlobalCalendarScreen(listaFiltro: actsFiltre);
       title = "Calendari d'Activitats";
     } else {
       //go to Personal calendar Screen
@@ -58,6 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ? IconButton(
                   icon: Icon(Icons.filter_alt_outlined),
                   onPressed: () {
+                    actsFiltre = [];//reiniciem el filtre
                     Navigator.of(context)
                         .push(MaterialPageRoute(
                       builder: (context) => FilterScreen(),
