@@ -120,7 +120,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ? IconButton(
                   icon: Icon(Icons.filter_alt_outlined),
                   onPressed: () {
-                    actsFiltre = []; //reiniciem el filtre
+                    actsFiltre = [];
+                    listaFiltro=['Spinning',
+                                'Calistenia',
+                                'Kickboxing',
+                                'Ioga',
+                                'Crossfit',]; //reiniciem el filtre cada cop que entrem
                     Navigator.of(context)
                         .push(MaterialPageRoute(
                       builder: (context) => FilterScreen(
