@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto/model/activitat.dart';
+import 'package:proyecto/screens/structureApp.dart';
 
 import 'activityScreen.dart';
 
@@ -113,8 +114,9 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
             ],
           ),
           trailing: FlatButton(
-            child: Icon(Icons.remove),
+            child: Icon(Icons.remove_circle_outline),
             onPressed: () {
+              screen = 2;//per que torni a la pantalla de personal screen per si volem seguir cancelant o consultant
               //OPCIÓN 2: (AL VOLVER A LA PANTALLA ANTIGUA SE BLOQUEA LA APP)
               Navigator.push(
                   context,

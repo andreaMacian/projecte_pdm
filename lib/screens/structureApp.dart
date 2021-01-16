@@ -68,7 +68,7 @@ class StructureApp extends StatelessWidget {
     );
   }
 }
-
+int screen = 1;
 class MyHomePage extends StatefulWidget {
   MyHomePage();
   @override
@@ -76,7 +76,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int screen = 1;
+  
   /*
     0 -> newsScreen
     1 -> CalendarGlobal
