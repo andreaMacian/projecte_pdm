@@ -54,14 +54,11 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
   /*final DateTime actualDate =
       DateTime(2021, 01, 18); //dataAvui (dilluns de la setmana actual */ //CAL IMPLEMENTAR
 
-  DateTime weekStart =
-      DateTime(2021, 01, 18);
-  DateTime weekEnd;
+  DateTime weekStart = DateTime(2021, 01, 18);
   List<DateTime> numDiaSem;
 
   @override
   void initState() {
-    weekEnd = weekStart.add(Duration(days: 6));
     numDiaSem = List<DateTime>.generate(
       7,
       (i) => DateTime(
@@ -142,13 +139,10 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
                     children: [
                       for (int i = 0; i < dies_semana.length; i++)
                         DiaCalendari2(
-                          nom: dies_semana[i] + '${numDiaSem[i].day}',
+                          nom: dies_semana[i] + ' ${numDiaSem[i].day}',
                           //nom: dies_semana[i] + '${numDiaSemana[i]}',
                           acth: [
                             for (var activitat in llistaActivitats)
-                              //Hauria d'estar dins del dia
-                              //fer métode -- passe activitat i data
-                              //quan cliques <> que es generin els dies
                               if (activitat.dataInici.isAfter(numDiaSem[0]) &&
                                   activitat.dataInici.isBefore(numDiaSem[6]) &&
                                   activitat.dataInici.day == numDiaSem[i].day &&
@@ -194,6 +188,7 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
 
   @override
   Widget build(BuildContext context) {
+    final actualDate = DateTime(2021, 01, 18);
     final day = widget.day;
     return Container(
       height: 60,
@@ -212,10 +207,12 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FlatButton(
-              child: Icon(Icons.arrow_back_ios_rounded),
-              onPressed: widget.onPrev,
-            ),
+            actualDate == day
+                ? SizedBox(width: 88)
+                : FlatButton(
+                    child: Icon(Icons.arrow_back_ios_rounded),
+                    onPressed: widget.onPrev,
+                  ),
             Column(
               children: [
                 Text(
