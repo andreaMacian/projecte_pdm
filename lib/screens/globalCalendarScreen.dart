@@ -76,15 +76,6 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
           }
           final llistaActivitats = snapshot.data.docs;
 
-          bool actInscrita(var activ) {
-            //////////////////////////////////ACABAR
-            if (activ['num_assis'] == 0) return false;
-            for (int j = 0; j < 6; j++) {
-              print('$j');
-              return true;
-            }
-          }
-
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: Column(
@@ -160,6 +151,8 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
                                         a['max_assis'],
                                         a['num_assis'],
                                         a.id,
+                                        //Peta aquí
+                                        //assistents: a['assistents'],
                                       )
                                 ],
                               ),
@@ -277,6 +270,17 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
   Widget activity(List<Activitat> acth, int hora) {
     final int index = acth.indexWhere((a) => a.dataInici.hour == hora);
 
+    /*
+    bool actInscrita(List act) {
+      for (int j = 0; j < act.length; j++) {
+        if (FirebaseAuth.instance.currentUser.uid == act[j]['idUsuari'])
+          return true;
+        //print('$j');
+      }
+      return false;
+    }
+    */
+
     return Container(
       height: 34,
       child: index != -1
@@ -288,8 +292,12 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
                       opaque: false,
                       barrierColor: Colors.black87,
                       pageBuilder: (BuildContext context, _, __) {
-                        return ActivityScreen(acth[index],
-                            false); //mandamos la actividad 'seleccionada'
+                        return ActivityScreen(
+                            acth[index],
+
+                            //actInscrita(acth[index].assistents)  mandamos la actividad 'seleccionada'
+
+                            false);
                       },
                     )).then((value) => null);
               },
