@@ -1,9 +1,10 @@
 //import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:proyecto/model/activitat.dart';
+
 import 'activityScreen.dart';
 
 Map<String, Color> colorsActivitat = {
@@ -24,70 +25,34 @@ class PersonalCalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activitats = FirebaseFirestore.instance.collection(
-        'Activitats'); //recollim dades de firebase amb les activitats
-    //FirebaseDatabase.getInstance().
+    final llistaActivitats = Provider.of<List<Activitat>>(context);
 
-    final inscripcionsUser = FirebaseFirestore.instance
-        .collection('Usuaris')
-        .doc(
-            '${FirebaseAuth.instance.currentUser.uid}') // '${FirebaseAuth.instance.currentUser}'//'c5Dz89sXkUZ7s77yI8pdPQ6s0Nz1'
-        .collection(
-            'inscripcions'); //recollim les dades de les inscripcions , en aquest cas nomes d`un usuari
+    // CREEM UNA LLISTA AMB LA INFO DE LES ACTIVITATS INSCRITES
+    final llistaActInscrites = [];
+    for (int j = 0; j < llistaActivitats.length; j++) {
+      final activitat = llistaActivitats[j];
+      if (activitat.inscrita) {
+        llistaActInscrites.add(activitat);
+      }
+    }
 
-    return StreamBuilder(
-        stream: inscripcionsUser.snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          final inscripcionsDocs =
-              snapshot.data.docs; //LLISTA DE CODIS ACT INSCRITES USUARI
-
-          return StreamBuilder(
-              stream: activitats.orderBy('inici').snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                final actsDocs =
-                    snapshot.data.docs; //LLISTA D'ACT EXISTENTS AL GIMNÀS
-                final llistaActCompletes = [];
-
-                for (int i = 0; i < inscripcionsDocs.length; i++) {
-                  //// filtre per encreuar les dades de les 2 coleccions
-                  for (int j = 0; j < actsDocs.length; j++) {
-                    if (inscripcionsDocs[i]['idActivitat'] == actsDocs[j].id) {
-                      llistaActCompletes.add(actsDocs[
-                          j]); //CREEM UNA LLISTA AMB LA INFO DE LES ACTIVITATS INSCRITES
-                    }
-                  }
-                }
-
-                return ListView.builder(
-                  itemCount: llistaActCompletes.length,
-                  itemBuilder: (context, index) {
-                    final item = llistaActCompletes[index];
-
-                    return ActivitatInscrita(item: item);
-                  },
-                );
-              });
-        });
+    return ListView.builder(
+      itemCount: llistaActInscrites.length,
+      itemBuilder: (context, index) {
+        final item = llistaActInscrites[index];
+        return ActivitatInscrita(activitat: item);
+      },
+    );
   }
 }
 
 class ActivitatInscrita extends StatefulWidget {
   const ActivitatInscrita({
     Key key,
-    @required this.item,
+    @required this.activitat,
   }) : super(key: key);
 
-  final item;
+  final Activitat activitat;
 
   @override
   _ActivitatInscritaState createState() => _ActivitatInscritaState();
@@ -107,28 +72,28 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
             children: [
               Row(children: [
                 Text(
-                  widget.item['inici'].toDate().day.toString(),
+                  widget.activitat.dataInici.day.toString(),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text('/'),
                 Text(
-                  widget.item['inici'].toDate().month.toString(),
+                  widget.activitat.dataInici.month.toString(),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(' de '),
                 Text(
-                  widget.item['inici'].toDate().hour.toString(),
+                  widget.activitat.dataInici.hour.toString(),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(' a '),
                 Text(
-                  widget.item['final'].toDate().hour.toString(),
+                  widget.activitat.dataFinal.hour.toString(),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                   ),
@@ -137,12 +102,12 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
               SizedBox(
                 height: 3,
               ),
-              Text(widget.item['tipus']),
+              Text(widget.activitat.nom),
               SizedBox(
                 height: 3,
               ),
               Text(
-                widget.item['lloc'],
+                widget.activitat.sala,
                 style: TextStyle(color: Colors.grey[500]),
               )
             ],
@@ -157,18 +122,7 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
                     opaque: false,
                     barrierColor: Colors.black87,
                     pageBuilder: (BuildContext context, _, __) {
-                      return ActivityScreen(
-                          Activitat(
-                            widget.item['tipus'],
-                            widget.item['inici'].toDate(),
-                            widget.item['final'].toDate(),
-                            widget.item['lloc'],
-                            widget.item['entrenador'],
-                            widget.item['max_assis'],
-                            widget.item['num_assis'],
-                            widget.item.id,
-                          ),
-                          true);
+                      return ActivityScreen(widget.activitat, true);
                     },
                   ));
               //OPCIÓN 1 : (SE PONE LA PANTALLA NEGRA)
@@ -193,9 +147,9 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
           leading: Container(
             width: 80,
             child: Image.asset(
-              '${widget.item['tipus']}.png',
+              '${widget.activitat.nom}.png',
               fit: BoxFit.contain,
-              color: colorsActivitat[widget.item['tipus']],
+              color: colorsActivitat[widget.activitat.nom],
             ),
           ),
         ),

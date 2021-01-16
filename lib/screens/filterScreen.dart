@@ -8,24 +8,20 @@ class TypeActivities {
 }
 
 class FilterScreen extends StatefulWidget {
+  final List<String> listaFiltro;
+  FilterScreen({@required this.listaFiltro});
   @override
   _FilterScreenState createState() => _FilterScreenState();
 }
 
 class _FilterScreenState extends State<FilterScreen> {
 //podriamos coger los nombres de los datos de fireStore
-  List<String> llistaAct = [
-    'Spinning',
-    'Calistenia',
-    'Kickboxing',
-    'Ioga',
-    'Crossfit'
-  ];
+  List<String> llistaAct;
   List<TypeActivities> tipusActivitats = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    llistaAct = [...widget.listaFiltro];
     for (int i = 0; i < llistaAct.length; i++) {
       tipusActivitats.add(TypeActivities(llistaAct[i], false));
     }
@@ -40,8 +36,8 @@ class _FilterScreenState extends State<FilterScreen> {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15), bottomLeft: Radius.circular(15)),
+            borderRadius:
+                BorderRadius.only(topLeft: Radius.circular(15), bottomLeft: Radius.circular(15)),
           ),
           width: 250,
           alignment: Alignment.topLeft,
@@ -60,10 +56,8 @@ class _FilterScreenState extends State<FilterScreen> {
                 SizedBox(height: 30),
                 Text(
                   'Tipus Activitats',
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[850]),
+                  style:
+                      TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.grey[850]),
                 ),
                 Expanded(
                   child: ListView.builder(
@@ -98,7 +92,7 @@ class _FilterScreenState extends State<FilterScreen> {
                       ),
                       onPressed: () {
                         //tiene que enviar el nombre de las actividades marcadas con true
-                       // creo la variable actsFiltre a strucureApp.dart
+                        // creo la variable actsFiltre a strucureApp.dart
                         for (int i = 0; i < tipusActivitats.length; i++)
                           if (tipusActivitats[i].selected)
                             actsFiltre.add(tipusActivitats[i].nomActivity);

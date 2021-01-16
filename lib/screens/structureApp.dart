@@ -1,38 +1,96 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:proyecto/model/activitat.dart';
 
 import 'filterScreen.dart';
 import 'globalCalendarScreen.dart';
 import 'newsScreen.dart';
 import 'personalCalendarScreen.dart';
 
- List<String> actsFiltre = [];
+List<String> actsFiltre = [];
 
 class StructureApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'GimnàsApp test xavi',
-      home: MyHomePage(),
+    final inscripcionsUser = FirebaseFirestore.instance
+        .collection('Usuaris')
+        .doc(
+            '${FirebaseAuth.instance.currentUser.uid}') // '${FirebaseAuth.instance.currentUser}'//'c5Dz89sXkUZ7s77yI8pdPQ6s0Nz1'
+        .collection(
+            'inscripcions'); //recollim les dades de les inscripcions , en aquest cas nomes d`un usuari
+
+    return StreamBuilder(
+      stream: inscripcionsUser.snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        final inscripcionsDocs = snapshot.data.docs; //LLISTA DE CODIS ACT INSCRITES USUARI
+
+        final Set<String> inscripcions = Set<String>();
+        for (var inscr in inscripcionsDocs) {
+          inscripcions.add(inscr.id);
+        }
+
+        return StreamBuilder(
+          stream: llistaActivitats(),
+          builder: (context, AsyncSnapshot<List<Activitat>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            final llistaActivitats = snapshot.data;
+
+            for (int i = 0; i < llistaActivitats.length; i++) {
+              final activitat = llistaActivitats[i];
+              if (inscripcions.contains(activitat.id)) {
+                activitat.inscrita = true;
+              }
+            }
+
+            return Provider.value(
+              value: llistaActivitats,
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'GimnàsApp test xavi',
+                home: MyHomePage(),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  MyHomePage();
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   int screen = 1;
-  String title = "Calendari d'Activitats";
   /*
     0 -> newsScreen
     1 -> CalendarGlobal
     2 -> personalCalendar
     */
+
+  String title = "Calendari d'Activitats";
+  List<String> listaFiltro = [
+    'Spinning',
+    'Calistenia',
+    'Kickboxing',
+    'Ioga',
+    'Crossfit',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +102,9 @@ class _MyHomePageState extends State<MyHomePage> {
     } else if (screen == 1) {
       //calendar global
       //Aquí anirà el widget del calendari global
-      mainwidget = GlobalCalendarScreen(listaFiltro: actsFiltre);
+      mainwidget = GlobalCalendarScreen(
+        listaFiltro: listaFiltro,
+      );
       title = "Calendari d'Activitats";
     } else {
       //go to Personal calendar Screen
@@ -60,14 +120,16 @@ class _MyHomePageState extends State<MyHomePage> {
               ? IconButton(
                   icon: Icon(Icons.filter_alt_outlined),
                   onPressed: () {
-                    actsFiltre = [];//reiniciem el filtre
+                    actsFiltre = []; //reiniciem el filtre
                     Navigator.of(context)
                         .push(MaterialPageRoute(
-                      builder: (context) => FilterScreen(),
+                      builder: (context) => FilterScreen(
+                        listaFiltro: listaFiltro,
+                      ),
                     ))
                         .then((actsFiltre) {
                       setState(() {
-                        GlobalCalendarScreen(listaFiltro: actsFiltre); 
+                        listaFiltro = actsFiltre;
                       });
                     });
                   },
@@ -104,8 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       Spacer(),
                       FlatButton(
-                        child: Icon(Icons.list,
-                            color: (screen == 0) ? Colors.grey : Colors.black),
+                        child: Icon(Icons.list, color: (screen == 0) ? Colors.grey : Colors.black),
                         onPressed: () {
                           setState(() {
                             screen = 0;

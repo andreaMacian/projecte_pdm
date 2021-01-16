@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:proyecto/model/activitat.dart';
 
 import 'activityScreen.dart';
@@ -15,7 +16,7 @@ const List<String> dies_semana = [
   'DISSABTE'
 ];
 
-Map<String, Color> colorsActivitat = {
+final Map<String, Color> colorsActivitat = {
   'Spinning': Colors.purple[100],
   'Calistenia': Colors.indigo,
   'Kickboxing': Colors.blueAccent,
@@ -23,29 +24,20 @@ Map<String, Color> colorsActivitat = {
   'Crossfit': Colors.green[300]
 };
 
-var weekStart =
-    DateTime(2020, 12, 14); //dataAvui (dilluns de la setmana actual)
-
-var numDiaSem = List<DateTime>.generate(
-    7,
-    (i) => DateTime(weekStart.year, weekStart.month, weekStart.day)
-        .add(Duration(days: i)));
-
-var weekEnd = weekStart.add(Duration(days: 6));
-
 class GlobalCalendarScreen extends StatefulWidget {
   /*const GlobalCalendarScreen({
     Key key,
     this.docs,
   }) : super(key: key);*/
-
   final List<String> filtre = [];
   final List<QueryDocumentSnapshot> docs;
 
-  GlobalCalendarScreen({this.docs, List<String> listaFiltro}) {
+  GlobalCalendarScreen({
+    this.docs,
+    List<String> listaFiltro,
+  }) {
     if (listaFiltro == null || listaFiltro.length == 0)
-      filtre
-          .addAll(['Spinning', 'Calistenia', 'Kickboxing', 'Ioga', 'Crossfit']);
+      filtre.addAll(['Spinning', 'Calistenia', 'Kickboxing', 'Ioga', 'Crossfit']);
     else {
       for (int i = 0; i < listaFiltro.length; i++) {
         filtre.add(listaFiltro[i]);
@@ -58,118 +50,128 @@ class GlobalCalendarScreen extends StatefulWidget {
 }
 
 class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
+  //dataAvui (dilluns de la setmana actual)
+  DateTime weekStart = DateTime(2020, 12, 14);
+  DateTime weekEnd;
+  List<DateTime> numDiaSem;
+
+  @override
+  void initState() {
+    weekEnd = weekStart.add(Duration(days: 6));
+    numDiaSem = List<DateTime>.generate(
+      7,
+      (i) => DateTime(
+        weekStart.year,
+        weekStart.month,
+        weekStart.day,
+      ).add(
+        Duration(days: i),
+      ),
+    );
+
+    super.initState();
+  }
+
+  void _moveWeek(int days) {
+    setState(() {
+      weekStart = weekStart.add(Duration(days: days));
+      numDiaSem = List<DateTime>.generate(7,
+          (i) => DateTime(weekStart.year, weekStart.month, weekStart.day).add(Duration(days: i)));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    //data final depen de data inici de manera automatica (ja no l'hem de crear)
-    final act = FirebaseFirestore.instance.collection('Activitats').where(
-        'inici',
-        isGreaterThanOrEqualTo:
-            weekStart); //data inici igual o superior a inici setmana
-
-    return StreamBuilder(
-        stream: act.snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          final llistaActivitats = snapshot.data.docs;
-
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5),
-            child: Column(
+    final llistaActivitats = Provider.of<List<Activitat>>(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5),
+            child: CanviSetmanaCalendari(
+              day: numDiaSem[0],
+              onNext: () => _moveWeek(7),
+              onPrev: () => _moveWeek(-7),
+            ),
+          ),
+          Expanded(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: CanviSetmanaCalendari(),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                Container(
+                  //CONTAINER CON LAS HORAS
+                  width: 60,
+                  color: Colors.white,
+                  child: Column(
                     children: [
-                      Container(
-                        //CONTAINER CON LAS HORAS
-                        width: 60,
-                        color: Colors.white,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 40,
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    for (int i = 9; i < 22; i++)
-                                      Text(
-                                        '$i:00',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      SizedBox(
+                        height: 40,
                       ),
                       Expanded(
-                        //Lista horizontal con los días
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            for (int i = 0; i < dies_semana.length; i++)
-                              DiaCalendari2(
-                                nom: dies_semana[i] + '${numDiaSem[i].day}',
-                                //nom: dies_semana[i] + '${numDiaSemana[i]}',
-                                acth: [
-                                  for (var a in llistaActivitats)
-                                    //Hauria d'estar dins del dia
-                                    //fer métode -- passe activitat i data
-                                    //quan cliques <> que es generin els dies
-                                    if (a['inici']
-                                            .toDate()
-                                            .isAfter(numDiaSem[0]) &&
-                                        a['inici']
-                                            .toDate()
-                                            .isBefore(numDiaSem[6]) &&
-                                        a['inici'].toDate().day ==
-                                            numDiaSem[i].day &&
-                                        widget.filtre.contains(a['tipus']))
-                                      Activitat(
-                                        a['tipus'],
-                                        a['inici'].toDate(),
-                                        a['final'].toDate(),
-                                        a['lloc'],
-                                        a['entrenador'],
-                                        a['max_assis'],
-                                        a['num_assis'],
-                                        a.id,
-                                        //Peta aquí
-                                        //assistents: a['assistents'],
-                                      )
-                                ],
-                              ),
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              for (int i = 9; i < 22; i++)
+                                Text(
+                                  '$i:00',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
+                Expanded(
+                  //Lista horizontal con los días
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      for (int i = 0; i < dies_semana.length; i++)
+                        DiaCalendari2(
+                          nom: dies_semana[i] + '${numDiaSem[i].day}',
+                          //nom: dies_semana[i] + '${numDiaSemana[i]}',
+                          acth: [
+                            for (var activitat in llistaActivitats)
+                              //Hauria d'estar dins del dia
+                              //fer métode -- passe activitat i data
+                              //quan cliques <> que es generin els dies
+                              if (activitat.dataInici.isAfter(numDiaSem[0]) &&
+                                  activitat.dataInici.isBefore(numDiaSem[6]) &&
+                                  activitat.dataInici.day == numDiaSem[i].day &&
+                                  widget.filtre.contains(activitat.nom))
+                                activitat
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
               ],
             ),
-          );
-        });
+          ),
+        ],
+      ),
+    );
   }
 }
 
 class CanviSetmanaCalendari extends StatefulWidget {
+  final DateTime day;
+  final Function onNext;
+  final Function onPrev;
+  CanviSetmanaCalendari({
+    @required this.day,
+    @required this.onNext,
+    @required this.onPrev,
+  });
+
   @override
   _CanviSetmanaCalendariState createState() => _CanviSetmanaCalendariState();
 }
@@ -186,6 +188,7 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
 
   @override
   Widget build(BuildContext context) {
+    final day = widget.day;
     return Container(
       height: 60,
       decoration: BoxDecoration(
@@ -205,17 +208,7 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
           children: [
             FlatButton(
               child: Icon(Icons.arrow_back_ios_rounded),
-              onPressed: () {
-                setState(() {
-                  weekStart = weekStart.add(Duration(days: -7));
-                  numDiaSem = List<DateTime>.generate(
-                      7,
-                      (i) => DateTime(
-                              weekStart.year, weekStart.month, weekStart.day)
-                          .add(Duration(days: i)));
-                  actualitzaCalendar();
-                });
-              },
+              onPressed: widget.onPrev,
             ),
             Column(
               children: [
@@ -227,7 +220,7 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
                   ),
                 ),
                 Text(
-                  'Setmana ${numDiaSem[0].day} / ${numDiaSem[0].month} / ${numDiaSem[0].year}',
+                  'Setmana ${day.day} / ${day.month} / ${day.year}',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -239,17 +232,7 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
             ),
             FlatButton(
               child: Icon(Icons.arrow_forward_ios_rounded),
-              onPressed: () {
-                setState(() {
-                  weekStart = weekStart.add(Duration(days: 7));
-                  numDiaSem = List<DateTime>.generate(
-                      7,
-                      (i) => DateTime(
-                              weekStart.year, weekStart.month, weekStart.day)
-                          .add(Duration(days: i)));
-                  actualitzaCalendar();
-                });
-              },
+              onPressed: widget.onNext,
             ),
           ],
         ),
@@ -287,19 +270,18 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
           ? RaisedButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      opaque: false,
-                      barrierColor: Colors.black87,
-                      pageBuilder: (BuildContext context, _, __) {
-                        return ActivityScreen(
-                            acth[index],
-
-                            //actInscrita(acth[index].assistents)  mandamos la actividad 'seleccionada'
-
-                            false);
-                      },
-                    )).then((value) => null);
+                  context,
+                  PageRouteBuilder(
+                    opaque: false,
+                    barrierColor: Colors.black87,
+                    pageBuilder: (BuildContext context, _, __) {
+                      return ActivityScreen(
+                        acth[index],
+                        acth[index].inscrita,
+                      );
+                    },
+                  ),
+                ).then((value) => null);
               },
               color: colorsActivitat[acth[index].nom],
               child: Center(
@@ -325,8 +307,8 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
             ),
           ],
           color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+          borderRadius:
+              BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
         ),
         child: Column(
           children: [
@@ -344,8 +326,7 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  for (int hora = 9; hora < 22; hora++)
-                    activity(widget.acth, hora),
+                  for (int hora = 9; hora < 22; hora++) activity(widget.acth, hora),
                 ],
               ),
             ),
