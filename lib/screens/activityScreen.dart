@@ -40,7 +40,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                             Icons.arrow_back_ios,
                           ),
                           onPressed: () {
-                            Navigator.of(context).pop(); //de moment surt una pantalla negra
+                            Navigator.of(context)
+                                .pop(); //de moment surt una pantalla negra
                             //screen = 2; //si vens del personal calendar hauria de ser screen = 1? o al fer pop ja hauria de funcionar?
                           }),
                     ),
@@ -66,7 +67,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     '${widget.activitat.nom}',
@@ -125,9 +127,13 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         Container(
                           alignment: Alignment.center,
                           child: RaisedButton(
-                            color: widget.inscrit ? Colors.green[100] : Colors.green[300],
+                            color: widget.inscrit
+                                ? Colors.green[100]
+                                : Colors.green[300],
                             child: Text(
-                              widget.inscrit ? 'CANCEL·LAR INSCRIPCIÓ' : 'INSCRIURE',
+                              widget.inscrit
+                                  ? 'CANCEL·LAR INSCRIPCIÓ'
+                                  : 'INSCRIURE',
                               style: TextStyle(
                                 color: Colors.white,
                               ),
@@ -135,84 +141,39 @@ class _ActivityScreenState extends State<ActivityScreen> {
                             onPressed: () {
                               //SI ESTAS INTENTANT CANCEL.LAR:
                               if (widget.inscrit) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text('Confirmació'),
-                                    content: Text('Segur que et vols desapuntar?'),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        onPressed: () {
-                                          /*
-                                          //ha de fer la transacció esborrant ACT DE INSCRIPCIONS USUARI
-                                          //I A USUARI DE L'ACTIVITAT i després pop
-                                          var inscripEnUsuari = FirebaseFirestore
-                                              .instance
-                                              .collection('Usuaris')
-                                              .doc(
-                                                  '${FirebaseAuth.instance.currentUser.uid}')
-                                              .collection('inscripcions')
-                                              .where('idActivitat',
-                                                  isEqualTo:
-                                                      '${widget.activitat.id}'); //'idActivitat' : widget.activitat.id
-                                          /*
-                                          for(int i=0; i<inscripEnUsuari; i++){
-                                               FirebaseFirestore
-                                              .instance
-                                              .collection('Usuaris')
-                                              .doc(
-                                                  '${FirebaseAuth.instance.currentUser.uid}')
-                                              .collection('inscripcions')
-                                              .doc[${widget.activitat.id}];
-                                             }*/
+                                //DESAPUNTAR-TE:
+                                final db = FirebaseFirestore.instance;
+                                final userId =
+                                    FirebaseAuth.instance.currentUser.uid;
+                                final activitatId = widget.activitat.id;
 
-                                          var inscripEnActivitat = FirebaseFirestore
-                                              .instance
-                                              .collection('Activitats')
-                                              .doc(widget.activitat.id)
-                                              .collection('assistents')
-                                              .where('idUsuari',
-                                                  isEqualTo:
-                                                      '${FirebaseAuth.instance.currentUser.uid}'); //'idUsuari' : FirebaseAuth.instance.currentUser.uid
+                                final userRef = db.doc('Usuaris/$userId');
+                                final activitatRef =
+                                    db.doc('Activitats/$activitatId');
 
-                                          //FirebaseFirestore.instance.collection('Activitats').doc(widget.activitat.id).data().num_assis +1;
-                                          var assistents = FirebaseFirestore
-                                              .instance
-                                              .collection('Activitats')
-                                              .doc(widget.activitat.id);
+                                var inscripEnUsuari = userRef
+                                    .collection('inscripcions')
+                                    .doc(activitatId);
+                                var inscripEnActivitat = activitatRef
+                                    .collection('assistents')
+                                    .doc(userId);
 
-                                          return FirebaseFirestore.instance
-                                              .runTransaction(
-                                                  (transaction) async {
-                                            FirebaseFirestore.instance
-                                                .runTransaction(
-                                                    (transaction) async {
-                                              await transaction
-                                                  .update(assistents, {
-                                                'num_assis': FieldValue.increment(
-                                                    -1), //restamos un asistente
-                                              });
-                                              await transaction.delete(inscripEnActivitat); //borramos al usuario de la actv
-                                              await transaction.delete(
-                                                  inscripEnUsuari); //borramos la act del usuario
-                                            }).catchError((e) {
-                                              return false;
-                                            });
-                                            Navigator.of(context).pop();
-                                          });
-                                        */
-                                        },
-                                        child: Text('Confirmar'),
-                                      ),
-                                      FlatButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Cancelar'),
-                                      )
-                                    ],
-                                  ),
-                                );
+                                return db.runTransaction((transaction) async {
+                                  FirebaseFirestore.instance
+                                      .runTransaction((transaction) async {
+                                    transaction.update(activitatRef, {
+                                      'num_assis': FieldValue.increment(
+                                          -1), //TREIEM un assistent
+                                    });
+                                    transaction.delete(
+                                        inscripEnUsuari); //BORRAS activ del usuario
+                                    transaction.delete(
+                                        inscripEnActivitat); //BORRAS usuario de la acti
+                                  }).catchError((e) {
+                                    return false;
+                                  });
+                                  Navigator.of(context).pop();
+                                });
                               }
                               //SI T'ESTAS INTENTANT APUNTAR:
                               else {
@@ -220,16 +181,20 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                 //I A USUARI DE L'ACTIVITAT i després pop
                                 //OPCIO 1:
                                 final db = FirebaseFirestore.instance;
-                                final userId = FirebaseAuth.instance.currentUser.uid;
+                                final userId =
+                                    FirebaseAuth.instance.currentUser.uid;
                                 final activitatId = widget.activitat.id;
 
                                 final userRef = db.doc('Usuaris/$userId');
-                                final activitatRef = db.doc('Activitats/$activitatId');
+                                final activitatRef =
+                                    db.doc('Activitats/$activitatId');
 
-                                var inscripEnUsuari =
-                                    userRef.collection('inscripcions').doc(activitatId);
-                                var inscripEnActivitat =
-                                    activitatRef.collection('assistents').doc(userId);
+                                var inscripEnUsuari = userRef
+                                    .collection('inscripcions')
+                                    .doc(activitatId);
+                                var inscripEnActivitat = activitatRef
+                                    .collection('assistents')
+                                    .doc(userId);
 
                                 /*
                                 var assistents = debugAssertAllWidgetVarsUnset(reason)
@@ -237,32 +202,16 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                     .doc(widget.activitat.id);
                                 */
                                 return db.runTransaction((transaction) async {
-                                  FirebaseFirestore.instance.runTransaction((transaction) async {
+                                  FirebaseFirestore.instance
+                                      .runTransaction((transaction) async {
                                     transaction.update(activitatRef, {
-                                      'num_assis': FieldValue.increment(1), //añadimos un asistente
+                                      'num_assis': FieldValue.increment(
+                                          1), //añadimos un asistente
                                     });
-                                    transaction
-                                        .set(inscripEnUsuari, {}); //añades activ vacía al usuario
-                                    transaction.set(
-                                        inscripEnActivitat, {}); //añades usuario vacío a la acti
-                                    //OPCIO 2:
-                                    /*await FirebaseFirestore.instance
-                                        .collection('Activitats')
-                                        .doc(widget.activitat.id)
-                                        .collection('assistents')
-                                        .add({
-                                      '${FirebaseAuth.instance.currentUser.uid}':
-                                          null
-                                    });
-
-                                    await FirebaseFirestore.instance
-                                        .collection('Usuaris')
-                                        .doc(
-                                            '${FirebaseAuth.instance.currentUser.uid}')
-                                        .collection('inscripcions')
-                                        .add({
-                                      '${widget.activitat.id}': null
-                                    }); */
+                                    transaction.set(inscripEnUsuari,
+                                        {}); //añades activ vacía al usuario
+                                    transaction.set(inscripEnActivitat,
+                                        {}); //añades usuario vacío a la acti
                                   }).catchError((e) {
                                     return false;
                                   });

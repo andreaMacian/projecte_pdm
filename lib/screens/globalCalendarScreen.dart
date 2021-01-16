@@ -37,7 +37,8 @@ class GlobalCalendarScreen extends StatefulWidget {
     List<String> listaFiltro,
   }) {
     if (listaFiltro == null || listaFiltro.length == 0)
-      filtre.addAll(['Spinning', 'Calistenia', 'Kickboxing', 'Ioga', 'Crossfit']);
+      filtre
+          .addAll(['Spinning', 'Calistenia', 'Kickboxing', 'Ioga', 'Crossfit']);
     else {
       for (int i = 0; i < listaFiltro.length; i++) {
         filtre.add(listaFiltro[i]);
@@ -50,8 +51,11 @@ class GlobalCalendarScreen extends StatefulWidget {
 }
 
 class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
-  //dataAvui (dilluns de la setmana actual)
-  DateTime weekStart = DateTime(2020, 12, 14);
+  /*final DateTime actualDate =
+      DateTime(2021, 01, 18); //dataAvui (dilluns de la setmana actual */ //CAL IMPLEMENTAR
+
+  DateTime weekStart =
+      DateTime(2021, 01, 18);
   DateTime weekEnd;
   List<DateTime> numDiaSem;
 
@@ -75,8 +79,10 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
   void _moveWeek(int days) {
     setState(() {
       weekStart = weekStart.add(Duration(days: days));
-      numDiaSem = List<DateTime>.generate(7,
-          (i) => DateTime(weekStart.year, weekStart.month, weekStart.day).add(Duration(days: i)));
+      numDiaSem = List<DateTime>.generate(
+          7,
+          (i) => DateTime(weekStart.year, weekStart.month, weekStart.day)
+              .add(Duration(days: i)));
     });
   }
 
@@ -253,17 +259,6 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
   Widget activity(List<Activitat> acth, int hora) {
     final int index = acth.indexWhere((a) => a.dataInici.hour == hora);
 
-    /*
-    bool actInscrita(List act) {
-      for (int j = 0; j < act.length; j++) {
-        if (FirebaseAuth.instance.currentUser.uid == act[j]['idUsuari'])
-          return true;
-        //print('$j');
-      }
-      return false;
-    }
-    */
-
     return Container(
       height: 34,
       child: index != -1
@@ -307,8 +302,8 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
             ),
           ],
           color: Colors.white,
-          borderRadius:
-              BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
         ),
         child: Column(
           children: [
@@ -326,7 +321,8 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  for (int hora = 9; hora < 22; hora++) activity(widget.acth, hora),
+                  for (int hora = 9; hora < 22; hora++)
+                    activity(widget.acth, hora),
                 ],
               ),
             ),
@@ -336,116 +332,3 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
     );
   }
 }
-
-/*class DiaCalendari extends StatelessWidget {
-  DiaCalendari({
-    Key key,
-    @required this.docs,
-    @required this.dia,
-  }) : super(key: key);
- 
-  final List<QueryDocumentSnapshot> docs;
-  final int dia;
-  final List semana = [
-    'DILLUNS',
-    'DIMARTS',
-    'DIMECRES',
-    'DIJOUS',
-    'DIVENDRES',
-    'DISSABTE'
-  ];
- 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Container(
-        width: 140,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey[300],
-              offset: new Offset(0.0, 1.0),
-              blurRadius: 50.0,
-            ),
-          ],
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          children: [
-            Container(
-              child: Text(
-                '${semana[this.dia - 1]}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              height: 40,
-              alignment: Alignment.center,
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  for (int i = 9; i < 22; i++)
-                    Container(
-                      height: 35,
-                      child: (i == 9 &&
-                              docs[0]['final']
-                                      .toDate()
-                                      .toString()
-                                      .split(" ")[1] ==
-                                  "09:00:00.000")
-                          ? RaisedButton(
-                              onPressed: () {},
-                              color: Colors.blue[100],
-                              child: Center(
-                                  child: Text(docs[0]['final']
-                                      .toDate()
-                                      .toString()
-                                      .split(" ")[0])),
-                            )
-                          : SizedBox(),
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-} 
-
-bool actInscrita() {
-      //S'HA DE COMPROBAR SI L'USUARI ESTÀ REGISTRAT A L'ACTIV O NO
-      bool inscrit = false;
-      final act = FirebaseFirestore.instance
-          .collection('Activitats')
-          .doc('${acth[index].id}')
-          .collection('assistents');
-      return StreamBuilder(
-          stream: act.snapshots(),
-          // ignore: missing_return
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            final assistents = snapshot.data.docs;
-            
-            for (int j = 0; j < assistents.length; j++) {
-              //print('$j');
-              if (FirebaseAuth.instance.currentUser.uid ==
-                  assistents[j]['idUsuari']) {
-                inscrit = true;
-                //CREEM UNA LLISTA AMB LA INFO DE LES ACTIVITATS INSCRITES
-              }
-            }
-          });
-      return inscrit;
-    }
-
-*/
