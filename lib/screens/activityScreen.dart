@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto/model/activitat.dart';
+import 'package:proyecto/screens/personalCalendarScreen.dart';
 
 class ActivityScreen extends StatefulWidget {
   final Activitat activitat;
@@ -57,6 +58,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                               child: Image.asset(
                                 '${widget.activitat.nom}.png',
                                 fit: BoxFit.contain,
+                                color: colorsActivitat[widget.activitat.nom],
                               ),
                             ),
                             Padding(
