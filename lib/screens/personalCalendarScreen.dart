@@ -8,12 +8,12 @@ import 'package:proyecto/screens/structureApp.dart';
 
 import 'activityScreen.dart';
 
-Map<String, Color> colorsActivitat = {
-  'Spinning': Colors.purple[100],
-  'Calistenia': Colors.indigo,
-  'Kickboxing': Colors.blueAccent,
-  'Ioga': Colors.amber,
-  'Crossfit': Colors.green[300]
+final Map<String, Color> colorsActivitat = {
+  'Spinning': Color.fromRGBO(231, 187, 227, 1),
+  'Calistenia': Color.fromRGBO(125, 91, 166, 1),
+  'Kickboxing': Color.fromRGBO(0, 166, 237, 1),
+  'Ioga': Color.fromRGBO(255, 202, 58, 1),
+  'Crossfit': Color.fromRGBO(125, 205, 133, 1),
 };
 
 class PersonalCalendarScreen extends StatelessWidget {
@@ -75,35 +75,57 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
                 Text(
                   widget.activitat.dataInici.day.toString(),
                   style: TextStyle(
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16
                   ),
                 ),
-                Text('/'),
+                Text(
+                  '/',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Text(
                   widget.activitat.dataInici.month.toString(),
                   style: TextStyle(
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(' de '),
+                Text(
+                  ' de ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Text(
                   widget.activitat.dataInici.hour.toString(),
                   style: TextStyle(
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(' a '),
+                Text(
+                  ' a ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Text(
                   widget.activitat.dataFinal.hour.toString(),
                   style: TextStyle(
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ]),
               SizedBox(
                 height: 3,
               ),
-              Text(widget.activitat.nom),
+              Text(
+                widget.activitat.nom,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[700],
+                ),
+              ),
               SizedBox(
                 height: 3,
               ),
@@ -116,7 +138,8 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
           trailing: FlatButton(
             child: Icon(Icons.remove_circle_outline),
             onPressed: () {
-              screen = 2;//per que torni a la pantalla de personal screen per si volem seguir cancelant o consultant
+              screen =
+                  2; //per que torni a la pantalla de personal screen per si volem seguir cancelant o consultant
               //OPCIÓN 2: (AL VOLVER A LA PANTALLA ANTIGUA SE BLOQUEA LA APP)
               Navigator.push(
                   context,

@@ -82,7 +82,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   child: Container(
                     alignment: Alignment.center,
                     child: RaisedButton(
-                      color: Colors.green[100],
+                      color: colorGym,
                       child: Text(
                         'FILTRA',
                         style: TextStyle(

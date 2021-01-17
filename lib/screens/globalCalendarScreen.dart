@@ -16,13 +16,36 @@ const List<String> dies_semana = [
   'DISSABTE'
 ];
 
-final Map<String, Color> colorsActivitat = {
-  'Spinning': Colors.purple[100],
-  'Calistenia': Colors.indigo,
-  'Kickboxing': Colors.blueAccent,
-  'Ioga': Colors.amber,
-  'Crossfit': Colors.green[300]
+const Map<int, String> messos = {
+  1: 'Gener',
+  2: 'Febrer',
+  3: 'Març',
+  4: 'Abril',
+  5: 'Maig',
+  6: 'Juny',
+  7: 'Juliol',
+  8: 'Agost',
+  9: 'Septembre',
+  10: 'Ocutubre',
+  11: 'Novembre',
+  12: 'Desembre'
 };
+
+final Map<String, Color> colorsActivitat = {
+  'Spinning': Color.fromRGBO(231, 187, 227, 1),
+  'Calistenia': Color.fromRGBO(125, 91, 166, 1),
+  'Kickboxing': Color.fromRGBO(0, 166, 237, 1),
+  'Ioga': Color.fromRGBO(255, 202, 58, 1),
+  'Crossfit': Color.fromRGBO(125, 205, 133, 1),
+};
+
+/*final Map<String, Color> colorsActivitat2 = {
+  'Spinning': Color.fromARGB(255, 245, 229, 252),
+  'Calistenia': Color.fromARGB(255, 185, 185, 228),
+  'Kickboxing': Color.fromARGB(255, 175, 207, 242),
+  'Ioga': Color.fromARGB(255, 255, 215, 145),
+  'Crossfit': Color.fromARGB(255, 179, 239, 178),
+};*/
 
 class GlobalCalendarScreen extends StatefulWidget {
   /*const GlobalCalendarScreen({
@@ -216,7 +239,7 @@ class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
             Column(
               children: [
                 Text(
-                  '${DateTime.now().month}/${DateTime.now().year}',
+                  '${messos[day.month]} ${day.year}',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

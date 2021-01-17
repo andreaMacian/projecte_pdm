@@ -61,7 +61,10 @@ class _CollapsibleNewState extends State<CollapsibleNew> {
         child: ListTile(
           title: Text(
             widget.item['titol'],
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16
+            ),
           ),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 5.0),
@@ -74,6 +77,8 @@ class _CollapsibleNewState extends State<CollapsibleNew> {
                   overflow: _expanded ? null : TextOverflow.ellipsis,
                   textAlign: TextAlign.justify,
                   style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 15,
                     height: 1.4,
                   ),
                 ),
@@ -90,14 +95,14 @@ class _CollapsibleNewState extends State<CollapsibleNew> {
             ),
           ),
           trailing: Icon(
-            Icons.warning_outlined,
+            Icons.warning_amber_rounded,
             color: chooseColor(widget.item['rellevancia']),
           ),
         ),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.grey[300],
+              color: Colors.grey[350],
               offset: new Offset(0.0, 1.0),
               blurRadius: 50.0,
             ),

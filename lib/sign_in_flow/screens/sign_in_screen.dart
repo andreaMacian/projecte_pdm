@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 
 import 'sign_up_screen.dart';
 
+final Color colorGym= Color.fromARGB(255, 106, 204, 173);
+
 class SignInScreen extends StatefulWidget {
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -82,59 +84,107 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: colorGym,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              SizedBox(height: 70),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 45,
+                    child: Image.asset(
+                      'logo-ufit.png',
+                      fit: BoxFit.contain,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'UFit',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 55,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(height: 50),
-              Text(
-                'Sign In',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Theme.of(context).primaryColor,
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.white,
                 ),
-              ),
-              SizedBox(height: 30),
-              TextField(
-                controller: _email,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                height: 300,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 8,
                   ),
-                  labelText: 'Email',
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            color: colorGym,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: _email,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(3)),
+                        ),
+                        labelText: 'Email',
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    SizedBox(height: 12),
+                    TextField(
+                      controller: _password,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(3)),
+                        ),
+                        labelText: 'Password',
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    FlatButton(
+                      color: colorGym,
+                      child: Text(
+                        'Sign-in',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: () {
+                        _signInWithEmailWithPassword(
+                          email: _email.text,
+                          password: _password.text,
+                        );
+                      },
+                    ),
+                  ]),
                 ),
-                keyboardType: TextInputType.emailAddress,
               ),
-              SizedBox(height: 12),
-              TextField(
-                controller: _password,
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                  ),
-                  labelText: 'Password',
-                ),
-              ),
-              SizedBox(height: 40),
-              FlatButton(
-                color: Theme.of(context).primaryColor,
-                child: Text(
-                  'Sign-in',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                onPressed: () {
-                  _signInWithEmailWithPassword(
-                    email: _email.text,
-                    password: _password.text,
-                  );
-                },
-              ),
-              SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -142,7 +192,12 @@ class _SignInScreenState extends State<SignInScreen> {
                   SizedBox(width: 12),
                   FlatButton(
                     textColor: Theme.of(context).primaryColor,
-                    child: Text('Sign up'),
+                    child: Text(
+                      'Sign up',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                     onPressed: () {
                       Navigator.of(context)
                           .push(
