@@ -10,7 +10,6 @@ import 'newsScreen.dart';
 import 'personalCalendarScreen.dart';
 
 List<String> actsFiltre = [];
-
 class StructureApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -143,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ? IconButton(
                       icon: Icon(Icons.logout),
                       onPressed: () {
+                        screen = 1;
                         FirebaseAuth.instance.signOut();
                       },
                     )
