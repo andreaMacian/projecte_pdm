@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:proyecto/model/activitat.dart';
 
 import 'activityScreen.dart';
-import 'structureApp.dart';
 
 const List<String> dies_semana = [
   'DILLUNS',
@@ -31,11 +30,18 @@ const Map<int, String> messos = {
 };
 
 final Map<String, Color> colorsActivitat = {
-  'Spinning': Color.fromRGBO(231, 187, 227, 1),
-  'Calistenia': Color.fromRGBO(125, 91, 166, 1),
-  'Kickboxing': Color.fromRGBO(0, 166, 237, 1),
-  'Ioga': Color.fromRGBO(255, 202, 58, 1),
-  'Crossfit': Color.fromRGBO(125, 205, 133, 1),
+  'Spinning': Color.fromRGBO(213, 134, 207, 1),
+  'Calistenia': Color.fromRGBO(139, 109, 176, 1),
+  'Kickboxing': Color.fromRGBO(71, 200, 255, 1),
+  'Ioga': Color.fromRGBO(255, 206, 71, 1),
+  'Crossfit': Color.fromRGBO(93, 192, 103, 1),
+};
+final Map<String, Color> colorsActivitatInscrites = {
+  'Spinning': Color.fromRGBO(239, 210, 237, 1),
+  'Calistenia': Color.fromRGBO(192, 175, 212, 1),
+  'Kickboxing': Color.fromRGBO(194, 237, 255, 1),
+  'Ioga': Color.fromRGBO(255, 228, 153, 1),
+  'Crossfit': Color.fromRGBO(167, 221, 172, 1),
 };
 
 class GlobalCalendarScreen extends StatefulWidget {
@@ -274,7 +280,9 @@ class _DiaCalendari2State extends State<DiaCalendari2> {
                   ),
                 ).then((value) => null);
               },
-              color: colorsActivitat[acth[index].nom],
+              color: acth[index].inscrita
+                  ? colorsActivitatInscrites[acth[index].nom]
+                  : colorsActivitat[acth[index].nom],
               child: Center(
                 child: Text('${acth[index].nom}'),
               ),

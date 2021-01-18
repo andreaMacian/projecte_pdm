@@ -7,11 +7,11 @@ import 'package:proyecto/screens/structureApp.dart';
 import 'activityScreen.dart';
 
 final Map<String, Color> colorsActivitat = {
-  'Spinning': Color.fromRGBO(231, 187, 227, 1),
-  'Calistenia': Color.fromRGBO(125, 91, 166, 1),
-  'Kickboxing': Color.fromRGBO(0, 166, 237, 1),
-  'Ioga': Color.fromRGBO(255, 202, 58, 1),
-  'Crossfit': Color.fromRGBO(125, 205, 133, 1),
+  'Spinning': Color.fromRGBO(213, 134, 207, 1),
+  'Calistenia': Color.fromRGBO(139, 109, 176, 1),
+  'Kickboxing': Color.fromRGBO(71, 200, 255, 1),
+  'Ioga': Color.fromRGBO(255, 206, 71, 1),
+  'Crossfit': Color.fromRGBO(93, 192, 103, 1),
 };
 
 class PersonalCalendarScreen extends StatelessWidget {
