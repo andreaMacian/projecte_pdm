@@ -7,7 +7,7 @@ import 'package:proyecto/screens/structureApp.dart';
 import 'activityScreen.dart';
 
 final Map<String, Color> colorsActivitat = {
-  'Spinning': Color.fromRGBO(213, 134, 207, 1),
+  'Spinning': Color.fromRGBO(255, 153, 51, 1),
   'Calistenia': Color.fromRGBO(139, 109, 176, 1),
   'Kickboxing': Color.fromRGBO(71, 200, 255, 1),
   'Ioga': Color.fromRGBO(255, 206, 71, 1),
