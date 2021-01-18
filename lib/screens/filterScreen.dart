@@ -15,7 +15,6 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-//podriamos coger los nombres de los datos de fireStore
   List<String> llistaAct;
   List<TypeActivities> tipusActivitats = [];
   @override
@@ -36,8 +35,8 @@ class _FilterScreenState extends State<FilterScreen> {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius:
-                BorderRadius.only(topLeft: Radius.circular(15), bottomLeft: Radius.circular(15)),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15), bottomLeft: Radius.circular(15)),
           ),
           width: 250,
           alignment: Alignment.topLeft,
@@ -56,8 +55,10 @@ class _FilterScreenState extends State<FilterScreen> {
                 SizedBox(height: 30),
                 Text(
                   'Tipus Activitats',
-                  style:
-                      TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.grey[850]),
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[850]),
                 ),
                 Expanded(
                   child: ListView.builder(
@@ -91,8 +92,7 @@ class _FilterScreenState extends State<FilterScreen> {
                         ),
                       ),
                       onPressed: () {
-                        //tiene que enviar el nombre de las actividades marcadas con true
-                        // creo la variable actsFiltre a strucureApp.dart
+                        //ha d'enviar el nom de las activitats marcades amb true
                         for (int i = 0; i < tipusActivitats.length; i++)
                           if (tipusActivitats[i].selected)
                             actsFiltre.add(tipusActivitats[i].nomActivity);

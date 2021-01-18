@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto/model/activitat.dart';
@@ -39,19 +38,7 @@ final Map<String, Color> colorsActivitat = {
   'Crossfit': Color.fromRGBO(125, 205, 133, 1),
 };
 
-/*final Map<String, Color> colorsActivitat2 = {
-  'Spinning': Color.fromARGB(255, 245, 229, 252),
-  'Calistenia': Color.fromARGB(255, 185, 185, 228),
-  'Kickboxing': Color.fromARGB(255, 175, 207, 242),
-  'Ioga': Color.fromARGB(255, 255, 215, 145),
-  'Crossfit': Color.fromARGB(255, 179, 239, 178),
-};*/
-
 class GlobalCalendarScreen extends StatefulWidget {
-  /*const GlobalCalendarScreen({
-    Key key,
-    this.docs,
-  }) : super(key: key);*/
   final List<String> filtre = [];
   final List<QueryDocumentSnapshot> docs;
 
@@ -74,9 +61,6 @@ class GlobalCalendarScreen extends StatefulWidget {
 }
 
 class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
-  /*final DateTime actualDate =
-      DateTime(2021, 01, 18); //dataAvui (dilluns de la setmana actual */ //CAL IMPLEMENTAR
-
   DateTime weekStart = DateTime(2021, 01, 18);
   List<DateTime> numDiaSem;
 
@@ -127,7 +111,7 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  //CONTAINER CON LAS HORAS
+                  //Llista on son les hores
                   width: 60,
                   color: Colors.white,
                   child: Column(
@@ -156,14 +140,13 @@ class _GlobalCalendarScreenState extends State<GlobalCalendarScreen> {
                   ),
                 ),
                 Expanded(
-                  //Lista horizontal con los días
+                  //scroll amb els dies i activitats
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
                       for (int i = 0; i < dies_semana.length; i++)
                         DiaCalendari2(
                           nom: dies_semana[i] + ' ${numDiaSem[i].day}',
-                          //nom: dies_semana[i] + '${numDiaSemana[i]}',
                           acth: [
                             for (var activitat in llistaActivitats)
                               if (activitat.dataInici.isAfter(numDiaSem[0]) &&
@@ -200,19 +183,12 @@ class CanviSetmanaCalendari extends StatefulWidget {
 }
 
 class _CanviSetmanaCalendariState extends State<CanviSetmanaCalendari> {
-  Future<Widget> actualitzaCalendar() async {
-    return await Navigator.of(context).push(
-      MaterialPageRoute(
-        maintainState: true,
-        builder: (context) => StructureApp(),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final actualDate = DateTime(2021, 01, 18);
     final day = widget.day;
+
+    //widget superior per canviar setmana:
     return Container(
       height: 60,
       decoration: BoxDecoration(

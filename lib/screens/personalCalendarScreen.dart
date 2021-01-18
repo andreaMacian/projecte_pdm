@@ -1,5 +1,3 @@
-//import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -74,10 +72,7 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
               Row(children: [
                 Text(
                   widget.activitat.dataInici.day.toString(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(
                   '/',
@@ -140,7 +135,6 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
             onPressed: () {
               screen =
                   2; //per que torni a la pantalla de personal screen per si volem seguir cancelant o consultant
-              //OPCIÓN 2: (AL VOLVER A LA PANTALLA ANTIGUA SE BLOQUEA LA APP)
               Navigator.push(
                   context,
                   PageRouteBuilder(
@@ -150,23 +144,6 @@ class _ActivitatInscritaState extends State<ActivitatInscrita> {
                       return ActivityScreen(widget.activitat, true);
                     },
                   ));
-              //OPCIÓN 1 : (SE PONE LA PANTALLA NEGRA)
-              /*Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ActivityScreen(
-                        Activitat(
-                          widget.item['tipus'],
-                          widget.item['inici'].toDate(),
-                          widget.item['final'].toDate(),
-                          widget.item['lloc'],
-                          widget.item['entrenador'],
-                          widget.item['max_assis'],
-                          widget.item['num_assis'],
-                        ),
-                        true), //mandamos la actividad 'seleccionada'
-                  ),
-                )*/
-              //TENDREMOS QUE PONER EL THEN
             },
           ),
           leading: Container(

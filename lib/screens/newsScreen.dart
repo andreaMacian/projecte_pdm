@@ -23,7 +23,6 @@ class NewsScreen extends StatelessWidget {
             itemCount: newsDocs.length,
             itemBuilder: (context, index) {
               final item = newsDocs[index];
-              //bool _expanded = false;
 
               return CollapsibleNew(item);
             },
@@ -61,10 +60,7 @@ class _CollapsibleNewState extends State<CollapsibleNew> {
         child: ListTile(
           title: Text(
             widget.item['titol'],
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 5.0),

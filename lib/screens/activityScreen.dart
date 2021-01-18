@@ -45,9 +45,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                   Icons.arrow_back_ios,
                                 ),
                                 onPressed: () {
-                                  Navigator.of(context)
-                                      .pop(); //de moment surt una pantalla negra
-                                  //screen = 2; //si vens del personal calendar hauria de ser screen = 1? o al fer pop ja hauria de funcionar?
+                                  Navigator.of(context).pop();
                                 }),
                           ),
                         ),
@@ -206,9 +204,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         }
                         //SI T'ESTAS INTENTANT APUNTAR:
                         else {
-                          //ha de fer la transacció apuntant ACT DE INSCRIPCIONS USUARI
-                          //I A USUARI DE L'ACTIVITAT i després pop
-                          //OPCIO 1:
                           final db = FirebaseFirestore.instance;
                           final userId = FirebaseAuth.instance.currentUser.uid;
                           final activitatId = widget.activitat.id;
@@ -223,29 +218,25 @@ class _ActivityScreenState extends State<ActivityScreen> {
                           var inscripEnActivitat =
                               activitatRef.collection('assistents').doc(userId);
 
-                          /*
-                                var assistents = debugAssertAllWidgetVarsUnset(reason)
-                                    .collection('Activitats')
-                                    .doc(widget.activitat.id);
-                                */
-                          return db.runTransaction((transaction) async {
-                            FirebaseFirestore.instance
-                                .runTransaction((transaction) async {
-                              transaction.update(activitatRef, {
-                                'num_assis': FieldValue.increment(
-                                    1), //añadimos un asistente
+                          return db.runTransaction(
+                            (transaction) async {
+                              FirebaseFirestore.instance
+                                  .runTransaction((transaction) async {
+                                transaction.update(activitatRef, {
+                                  'num_assis': FieldValue.increment(
+                                      1), //añadimos un asistente
+                                });
+                                transaction.set(inscripEnUsuari,
+                                    {}); //añades activ vacía al usuario
+                                transaction.set(inscripEnActivitat,
+                                    {}); //añades usuario vacío a la acti
+                              }).catchError((e) {
+                                return false;
                               });
-                              transaction.set(inscripEnUsuari,
-                                  {}); //añades activ vacía al usuario
-                              transaction.set(inscripEnActivitat,
-                                  {}); //añades usuario vacío a la acti
-                            }).catchError((e) {
-                              return false;
-                            });
-                            Navigator.of(context).pop();
-                          });
+                              Navigator.of(context).pop();
+                            },
+                          );
                         }
-                        Navigator.of(context).pop();
                       },
                     ),
                   )

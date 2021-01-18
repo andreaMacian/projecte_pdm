@@ -10,8 +10,7 @@ import 'newsScreen.dart';
 import 'personalCalendarScreen.dart';
 
 List<String> actsFiltre = [];
-final Color colorGym= Color.fromARGB(255, 106, 204, 173);
-
+final Color colorGym = Color.fromARGB(255, 106, 204, 173);
 
 class StructureApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -19,10 +18,9 @@ class StructureApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final inscripcionsUser = FirebaseFirestore.instance
         .collection('Usuaris')
-        .doc(
-            '${FirebaseAuth.instance.currentUser.uid}') // '${FirebaseAuth.instance.currentUser}'//'c5Dz89sXkUZ7s77yI8pdPQ6s0Nz1'
+        .doc('${FirebaseAuth.instance.currentUser.uid}')
         .collection(
-            'inscripcions'); //recollim les dades de les inscripcions , en aquest cas nomes d`un usuari
+            'inscripcions'); //recollim les dades de les inscripcions del user logIn
 
     return StreamBuilder(
       stream: inscripcionsUser.snapshots(),
@@ -32,7 +30,8 @@ class StructureApp extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-        final inscripcionsDocs = snapshot.data.docs; //LLISTA DE CODIS ACT INSCRITES USUARI
+        final inscripcionsDocs =
+            snapshot.data.docs; //llista codis activ inscrites user
 
         final Set<String> inscripcions = Set<String>();
         for (var inscr in inscripcionsDocs) {
@@ -70,7 +69,9 @@ class StructureApp extends StatelessWidget {
     );
   }
 }
+
 int screen = 1;
+
 class MyHomePage extends StatefulWidget {
   MyHomePage();
   @override
@@ -78,7 +79,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
   /*
     0 -> newsScreen
     1 -> CalendarGlobal
@@ -103,7 +103,6 @@ class _MyHomePageState extends State<MyHomePage> {
       title = "Notícies";
     } else if (screen == 1) {
       //calendar global
-      //Aquí anirà el widget del calendari global
       mainwidget = GlobalCalendarScreen(
         listaFiltro: listaFiltro,
       );
@@ -124,11 +123,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: Icon(Icons.filter_alt_outlined),
                   onPressed: () {
                     actsFiltre = [];
-                    listaFiltro=['Spinning',
-                                'Calistenia',
-                                'Kickboxing',
-                                'Ioga',
-                                'Crossfit',]; //reiniciem el filtre cada cop que entrem
+                    listaFiltro = [
+                      'Spinning',
+                      'Calistenia',
+                      'Kickboxing',
+                      'Ioga',
+                      'Crossfit',
+                    ]; //reiniciem el filtre cada cop que entrem
                     Navigator.of(context)
                         .push(MaterialPageRoute(
                       builder: (context) => FilterScreen(
@@ -150,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         FirebaseAuth.instance.signOut();
                       },
                     )
-                  : SizedBox(), //que no haya ningún icono
+                  : SizedBox(), //cap icona
         ],
       ),
       body: Center(
@@ -175,7 +176,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       Spacer(),
                       FlatButton(
-                        child: Icon(Icons.list, color: (screen == 0) ? Colors.grey : Colors.black),
+                        child: Icon(Icons.list,
+                            color: (screen == 0) ? Colors.grey : Colors.black),
                         onPressed: () {
                           setState(() {
                             screen = 0;
@@ -214,141 +216,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-//NO ESBORRAR:
-/*Scaffold(
-      backgroundColor: colorGym,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: 70),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 45,
-                    child: Image.asset(
-                      'logo-ufit.png',
-                      fit: BoxFit.contain,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'UFit',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 55,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 50),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                height: 300,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 8,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Sign In',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                            color: colorGym,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    TextField(
-                      controller: _email,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(3)),
-                        ),
-                        labelText: 'Email',
-                      ),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    SizedBox(height: 12),
-                    TextField(
-                      controller: _password,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(3)),
-                        ),
-                        labelText: 'Password',
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    FlatButton(
-                      color: colorGym,
-                      child: Text(
-                        'Sign-in',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      onPressed: () {
-                        _signInWithEmailWithPassword(
-                          email: _email.text,
-                          password: _password.text,
-                        );
-                      },
-                    ),
-                  ]),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Need an account?'),
-                  SizedBox(width: 12),
-                  FlatButton(
-                    textColor: Theme.of(context).primaryColor,
-                    child: Text(
-                      'Sign up',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context)
-                          .push(
-                        MaterialPageRoute(
-                          builder: (_) => SignUpScreen(),
-                        ),
-                      )
-                          .then((result) {
-                        _createUserWithEmailAndPassword(
-                          email: result.email,
-                          password: result.password,
-                        );
-                      });
-                    },
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    )*/
